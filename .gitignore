@@ -1,0 +1,11 @@
+node_modules/
+.npm-cache/
+dist/
+frontend/dist/
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+backend/data/
+.env
+frontend/.env
+backend/.env

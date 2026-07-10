@@ -1,0 +1,38 @@
+import { BasketItem } from "./basket";
+
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
+export type OrderPayload = {
+  customerName: string;
+  customerPhone: string;
+  items: BasketItem[];
+  whatsappMessage: string;
+};
+
+export async function saveOrder(payload: OrderPayload) {
+  const response = await fetch(`${apiUrl}/api/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      customerName: payload.customerName,
+      customerPhone: payload.customerPhone,
+      whatsappMessage: payload.whatsappMessage,
+      items: payload.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.priceValue,
+      })),
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.error || "Order could not be saved.");
+  }
+
+  return data as { id: string; storage: "supabase" | "local" };
+}
