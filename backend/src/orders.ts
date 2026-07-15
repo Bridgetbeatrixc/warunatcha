@@ -1,9 +1,15 @@
-import { catalogById } from "./catalog";
+import { catalogById, milkOptions, seasonalAddOnById, sugarLevels } from "./catalog";
 
 export const orderStatuses = ["new", "preparing", "finished", "cancelled"] as const;
 export type OrderStatus = (typeof orderStatuses)[number];
 
-export type SafeOrderItem = { id: string; name: string; quantity: number; price: number };
+export type SafeOrderItem = {
+  id: string;
+  name: string;
+  quantity: number;
+  price: number;
+  options: { seasonalAddOn: string; sugarLevel: number; milkOption: string };
+};
 export type NewOrder = {
   customer_name: string;
   customer_phone: string;
@@ -40,11 +46,23 @@ export function validateOrder(payload: unknown): ValidationResult {
     const inputItem = rawItem as Record<string, unknown>;
     const catalogItem = catalogById.get(String(inputItem.id ?? ""));
     const quantity = Number(inputItem.quantity);
+    const seasonalAddOn = seasonalAddOnById.get(String(inputItem.seasonalAddOnId ?? "none"));
+    const sugarLevel = Number(inputItem.sugarLevel ?? 50);
+    const milkOption = String(inputItem.milkOption ?? "Dairy");
     if (!catalogItem) return { error: "Basket contains an unknown menu item." };
+    if (!seasonalAddOn) return { error: "Basket contains an unknown seasonal add-on." };
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 20) {
       return { error: "Item quantity must be between 1 and 20." };
     }
-    items.push({ ...catalogItem, quantity });
+    if (!sugarLevels.includes(sugarLevel as (typeof sugarLevels)[number])) return { error: "Invalid sugar level." };
+    if (!milkOptions.includes(milkOption as (typeof milkOptions)[number])) return { error: "Invalid milk option." };
+    items.push({
+      id: catalogItem.id,
+      name: catalogItem.name,
+      quantity,
+      price: catalogItem.price + seasonalAddOn.price,
+      options: { seasonalAddOn: seasonalAddOn.name, sugarLevel, milkOption },
+    });
   }
 
   return {

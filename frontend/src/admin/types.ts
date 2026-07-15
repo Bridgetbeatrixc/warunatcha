@@ -5,6 +5,11 @@ export type AdminOrderItem = {
   name: string;
   quantity: number;
   price: number;
+  options?: {
+    seasonalAddOn: string;
+    sugarLevel: number;
+    milkOption: string;
+  };
 };
 
 export type AdminOrder = {

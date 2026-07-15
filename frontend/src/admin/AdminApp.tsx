@@ -284,7 +284,13 @@ function Dashboard({ session }: { session: Session }) {
                 </div>
                 <div className="space-y-1 text-sm text-slate-600">
                   {order.items.map((item) => (
-                    <p key={item.id} className="flex justify-between gap-3"><span>{item.name}</span><strong className="text-slate-800">x{item.quantity}</strong></p>
+                    <div key={item.id} className="flex justify-between gap-3">
+                      <div>
+                        <p>{item.name}</p>
+                        {item.options ? <p className="text-[10px] text-slate-400">{item.options.seasonalAddOn} · {item.options.sugarLevel}% · {item.options.milkOption}</p> : null}
+                      </div>
+                      <strong className="text-slate-800">x{item.quantity}</strong>
+                    </div>
                   ))}
                 </div>
                 <strong className="text-sm text-slate-900">{formatRupiah(order.total_amount)}</strong>

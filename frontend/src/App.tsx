@@ -1,10 +1,10 @@
 import { FormEvent, useMemo, useState } from "react";
 import { Minus, Plus, Search, ShoppingBag } from "lucide-react";
 import { saveOrder } from "./api";
-import { addItem, BasketItem, formatRupiah, getBasketCount, getBasketTotal, updateQuantity } from "./basket";
+import { addConfiguredItem, BasketItem, formatRupiah, getBasketCount, getBasketTotal, updateQuantity } from "./basket";
 import { BrandCredit } from "./BrandCredit";
 import { buildBasketWhatsappMessage, buildBasketWhatsappUrl } from "./whatsapp";
-import { categories, Category, logoImage, menuBoardImage, menuItems } from "./menuData";
+import { categories, Category, logoImage, menuBoardImage, menuItems, milkOptions, seasonalAddOns, SugarLevel, sugarLevels, MilkOption } from "./menuData";
 
 type Customer = { name: string; phone: string };
 
@@ -15,6 +15,10 @@ export default function App() {
   const [customer, setCustomer] = useState<Customer>({ name: "", phone: "" });
   const [checkoutState, setCheckoutState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [checkoutMessage, setCheckoutMessage] = useState("");
+  const [customizingItem, setCustomizingItem] = useState<(typeof menuItems)[number] | null>(null);
+  const [selectedSeasonal, setSelectedSeasonal] = useState(seasonalAddOns[0]);
+  const [selectedSugar, setSelectedSugar] = useState<SugarLevel>(50);
+  const [selectedMilk, setSelectedMilk] = useState<MilkOption>("Dairy");
 
   const basketCount = getBasketCount(basket);
   const basketTotal = getBasketTotal(basket);
@@ -26,6 +30,23 @@ export default function App() {
       return categoryMatch && queryMatch;
     });
   }, [activeCategory, query]);
+
+  function openCustomization(item: (typeof menuItems)[number]) {
+    setCustomizingItem(item);
+    setSelectedSeasonal(seasonalAddOns[0]);
+    setSelectedSugar(50);
+    setSelectedMilk("Dairy");
+  }
+
+  function addCustomizedItem() {
+    if (!customizingItem) return;
+    setBasket((current) => addConfiguredItem(current, customizingItem, {
+      seasonalAddOn: selectedSeasonal,
+      sugarLevel: selectedSugar,
+      milkOption: selectedMilk,
+    }));
+    setCustomizingItem(null);
+  }
 
   async function handleCheckout(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -134,7 +155,7 @@ export default function App() {
 
             <div className="grid grid-cols-2 items-stretch gap-3 md:grid-cols-3 md:gap-4">
               {visibleItems.map((item) => {
-                const selectedQuantity = basket.find((basketItem) => basketItem.id === item.id)?.quantity || 0;
+                const selectedQuantity = basket.filter((basketItem) => basketItem.id === item.id).reduce((total, basketItem) => total + basketItem.quantity, 0);
                 return (
                   <article key={item.id} className="grid h-full min-h-[340px] grid-rows-[auto_minmax(0,1fr)_auto] rounded-lg border border-slate-100 bg-white p-3 shadow-lg shadow-emerald-950/5 sm:min-h-[420px] sm:p-4 xl:min-h-[500px]">
                     <div className="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-md bg-[#f0eadc]">
@@ -155,7 +176,7 @@ export default function App() {
                       <strong className="text-sm sm:text-base">{item.price}</strong>
                       <button
                         type="button"
-                        onClick={() => setBasket((current) => addItem(current, item))}
+                        onClick={() => openCustomization(item)}
                         className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#123b31] font-bold text-white transition hover:bg-[#185345]"
                         aria-label={`Add ${item.name} to basket`}
                       >
@@ -189,16 +210,17 @@ export default function App() {
               {basket.length === 0 ? (
                 <div className="rounded-md border border-dashed border-white/20 p-5 text-sm font-medium leading-6 text-white/60">Your basket is empty.</div>
               ) : basket.map((item) => (
-                <div key={item.id} className="grid grid-cols-[54px_minmax(0,1fr)_auto] items-center gap-3 rounded-md bg-white/10 p-3">
+                <div key={item.lineId} className="grid grid-cols-[54px_minmax(0,1fr)_auto] items-center gap-3 rounded-md bg-white/10 p-3">
                   <img src={item.image} alt="" className="h-[54px] w-[54px] rounded-md bg-white/10 object-contain p-1" />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold">{item.name}</p>
+                    <span className="mt-1 block truncate text-[10px] font-semibold text-white/60">{item.seasonalAddOn.id !== "none" ? item.seasonalAddOn.name : "Classic"} · {item.sugarLevel}% · {item.milkOption}</span>
                     <span className="mt-1 block text-xs font-semibold text-white/60">{formatRupiah(item.priceValue * item.quantity)}</span>
                   </div>
                   <div className="flex items-center rounded-full bg-white text-[#123b31]">
-                    <button type="button" onClick={() => setBasket((items) => updateQuantity(items, item.id, item.quantity - 1))} className="grid h-8 w-8 place-items-center" aria-label={`Remove one ${item.name}`}><Minus className="h-4 w-4" /></button>
+                    <button type="button" onClick={() => setBasket((items) => updateQuantity(items, item.lineId, item.quantity - 1))} className="grid h-8 w-8 place-items-center" aria-label={`Remove one ${item.name}`}><Minus className="h-4 w-4" /></button>
                     <strong className="min-w-5 text-center text-xs">{item.quantity}</strong>
-                    <button type="button" onClick={() => setBasket((items) => updateQuantity(items, item.id, item.quantity + 1))} className="grid h-8 w-8 place-items-center" aria-label={`Add one ${item.name}`}><Plus className="h-4 w-4" /></button>
+                    <button type="button" onClick={() => setBasket((items) => updateQuantity(items, item.lineId, item.quantity + 1))} className="grid h-8 w-8 place-items-center" aria-label={`Add one ${item.name}`}><Plus className="h-4 w-4" /></button>
                   </div>
                 </div>
               ))}
@@ -226,6 +248,59 @@ export default function App() {
           </form>
         </aside>
       </div>
+
+      {customizingItem ? (
+        <div className="fixed inset-0 z-50 grid place-items-end bg-slate-950/55 p-0 sm:place-items-center sm:p-5" role="dialog" aria-modal="true" aria-label={`Customize ${customizingItem.name}`}>
+          <form onSubmit={(event) => { event.preventDefault(); addCustomizedItem(); }} className="max-h-[92vh] w-full overflow-y-auto rounded-t-lg bg-[#f9f5ea] p-5 text-[#172338] shadow-2xl sm:max-w-xl sm:rounded-lg sm:p-7">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#708b4f]">Customize your drink</p>
+                <h2 className="mt-1 text-2xl font-bold">{customizingItem.name}</h2>
+                <p className="mt-1 text-sm font-semibold text-slate-500">Base price {customizingItem.price}</p>
+              </div>
+              <button type="button" onClick={() => setCustomizingItem(null)} className="grid h-9 w-9 place-items-center rounded-full bg-slate-200 text-xl text-slate-600" aria-label="Close customization">×</button>
+            </div>
+
+            <fieldset className="mt-6">
+              <legend className="text-sm font-bold">Seasonal add-on</legend>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {seasonalAddOns.map((option) => (
+                  <button key={option.id} type="button" onClick={() => setSelectedSeasonal(option)} className={`rounded-md border p-3 text-left transition ${selectedSeasonal.id === option.id ? "border-[#123b31] bg-[#123b31] text-white" : "border-slate-200 bg-white hover:border-slate-400"}`}>
+                    <span className="block text-sm font-bold">{option.name}</span>
+                    <span className={`mt-1 block text-xs font-semibold ${selectedSeasonal.id === option.id ? "text-white/70" : "text-slate-500"}`}>{option.priceValue ? `+${formatRupiah(option.priceValue)}` : "No add-on"}</span>
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset className="mt-6">
+              <legend className="text-sm font-bold">Sugar level</legend>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {sugarLevels.map((level) => (
+                  <button key={level} type="button" onClick={() => setSelectedSugar(level)} className={`rounded-md border px-3 py-3 text-sm font-bold transition ${selectedSugar === level ? "border-[#123b31] bg-[#123b31] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"}`}>{level}%</button>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset className="mt-6">
+              <legend className="text-sm font-bold">Milk option</legend>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {milkOptions.map((option) => (
+                  <button key={option} type="button" onClick={() => setSelectedMilk(option)} className={`rounded-md border px-2 py-3 text-sm font-bold transition ${selectedMilk === option ? "border-[#123b31] bg-[#123b31] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"}`}>{option}</button>
+                ))}
+              </div>
+            </fieldset>
+
+            <div className="mt-7 flex items-center justify-between gap-4 border-t border-slate-200 pt-5">
+              <div>
+                <span className="block text-xs font-bold uppercase tracking-[0.12em] text-slate-500">Price per drink</span>
+                <strong className="mt-1 block text-xl">{formatRupiah(customizingItem.priceValue + selectedSeasonal.priceValue)}</strong>
+              </div>
+              <button type="submit" className="rounded-md bg-[#123b31] px-5 py-3 font-bold text-white transition hover:bg-[#185345]">Add to basket</button>
+            </div>
+          </form>
+        </div>
+      ) : null}
 
       <footer className="mx-auto mt-6 max-w-7xl rounded-md bg-white px-5 py-5 sm:mb-1">
         <BrandCredit />

@@ -13,6 +13,21 @@ describe("validateOrder", () => {
     expect("order" in result && result.order.items[0].name).toBe("OG Matcha Latte");
   });
 
+  it("validates seasonal add-ons and drink options", () => {
+    const result = validateOrder({
+      customerName: "Bridget",
+      customerPhone: "081234567890",
+      items: [{ id: "og-matcha-latte", quantity: 1, seasonalAddOnId: "isuzu", sugarLevel: 0, milkOption: "Oat" }],
+    });
+
+    expect("order" in result && result.order.total_amount).toBe(77000);
+    expect("order" in result && result.order.items[0].options).toEqual({
+      seasonalAddOn: "Isuzu",
+      sugarLevel: 0,
+      milkOption: "Oat",
+    });
+  });
+
   it("rejects unknown products and excessive quantities", () => {
     const base = { customerName: "Bridget", customerPhone: "081234567890" };
     const unknown = validateOrder({ ...base, items: [{ id: "unknown", quantity: 1 }] });

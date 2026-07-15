@@ -11,12 +11,40 @@ export type MenuItem = {
   badge?: string;
 };
 
+export type SeasonalAddOn = {
+  id: string;
+  name: string;
+  priceValue: number;
+};
+
+export type SugarLevel = 0 | 25 | 50;
+export type MilkOption = "Dairy" | "Oat" | "Houseblend";
+
 const asset = (fileName: string) => `/assets/${encodeURIComponent(fileName)}`;
 const fallbackProductImage = asset("Logo no background.PNG");
 
 export const whatsappNumber = "6285959161970";
 
 export const categories: Category[] = ["All", "Matcha", "Special", "Pure Tea"];
+
+export const seasonalAddOns: SeasonalAddOn[] = [
+  { id: "none", name: "No seasonal add-on", priceValue: 0 },
+  { id: "isuzu", name: "Isuzu", priceValue: 25000 },
+  { id: "chawa", name: "Chawa", priceValue: 18000 },
+  { id: "nami", name: "Nami", priceValue: 22000 },
+  { id: "fujinoshiro", name: "Fujinoshiro", priceValue: 18000 },
+  { id: "hatsu", name: "Hatsu", priceValue: 11000 },
+  { id: "aoarashi", name: "Aoarashi", priceValue: 22000 },
+  { id: "uji", name: "Uji", priceValue: 15000 },
+  { id: "wakatake", name: "Wakatake", priceValue: 14000 },
+  { id: "samidori", name: "Samidori", priceValue: 23000 },
+  { id: "yame", name: "Yame", priceValue: 25000 },
+  { id: "kikuju", name: "Kikuju", priceValue: 25000 },
+  { id: "kanbayashi", name: "Kanbayashi", priceValue: 14000 },
+];
+
+export const sugarLevels: SugarLevel[] = [0, 25, 50];
+export const milkOptions: MilkOption[] = ["Dairy", "Oat", "Houseblend"];
 
 export const menuItems: MenuItem[] = [
   {
