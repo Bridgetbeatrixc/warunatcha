@@ -57,14 +57,14 @@ function AdminLogin({ onSession }: { onSession: (session: Session) => void }) {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#f4f1e7] px-5 py-10 text-slate-900">
+    <main className="grid min-h-screen place-items-center bg-[#f4f1e7] px-5 py-10 font-['Source_Sans_3'] text-slate-900">
       <section className="w-full max-w-md overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl shadow-emerald-950/10">
         <div className="bg-[#103c32] px-7 py-8 text-white">
           <div className="flex items-center gap-3">
             <img src={logoImage} alt="Warunatcha" className="h-12 w-12 rounded-full border-2 border-white/20 object-cover" />
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-200">Warunatcha</p>
-              <h1 className="mt-1 text-2xl font-bold">Order dashboard</h1>
+              <h1 className="mt-1 font-['Merriweather'] text-2xl font-bold">Order dashboard</h1>
             </div>
           </div>
           <p className="mt-6 text-sm leading-6 text-white/65">Sign in with the approved Supabase administrator account.</p>
@@ -181,14 +181,14 @@ function Dashboard({ session }: { session: Session }) {
   ];
 
   return (
-    <main className="min-h-screen bg-[#f5f3eb] text-slate-900">
+    <main className="min-h-screen bg-[#f5f3eb] font-['Source_Sans_3'] text-slate-900">
       <header className="border-b border-emerald-950/10 bg-[#103c32] text-white">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <div className="flex items-center gap-3">
             <img src={logoImage} alt="Warunatcha" className="h-11 w-11 rounded-full border-2 border-white/20 object-cover" />
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-200">Warunatcha</p>
-              <h1 className="text-xl font-bold">Orders</h1>
+              <h1 className="font-['Merriweather'] text-xl font-bold">Orders</h1>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -364,7 +364,7 @@ export default function AdminApp() {
   }, []);
 
   if (checkingSession) {
-    return <main className="grid min-h-screen place-items-center bg-[#f4f1e7]"><LoaderCircle className="h-7 w-7 animate-spin text-emerald-900" /></main>;
+    return <main className="grid min-h-screen place-items-center bg-[#f4f1e7] font-['Source_Sans_3']"><LoaderCircle className="h-7 w-7 animate-spin text-emerald-900" /></main>;
   }
 
   return session ? <Dashboard session={session} /> : <AdminLogin onSession={setSession} />;

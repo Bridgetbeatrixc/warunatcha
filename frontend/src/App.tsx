@@ -83,7 +83,7 @@ export default function App() {
   const checkoutDisabled = checkoutState === "saving" || basket.length === 0 || customer.name.trim().length < 2 || customer.phone.trim().length < 8;
 
   return (
-    <main className="min-h-screen min-w-[320px] bg-[#ebe4d5] px-0 py-0 text-[#172338] sm:px-5 sm:py-5">
+    <main className="min-h-screen min-w-[320px] bg-[#ebe4d5] px-0 py-0 font-['Source_Sans_3'] text-[#172338] sm:px-5 sm:py-5">
       <div className="mx-auto grid max-w-7xl items-start gap-6 lg:grid-cols-[minmax(0,1fr)_390px]">
         <section className="overflow-hidden bg-[#123b31] shadow-2xl shadow-emerald-950/15 sm:rounded-lg">
           <header className="px-5 pb-5 pt-6 text-white sm:px-7">
@@ -109,7 +109,7 @@ export default function App() {
             <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#b9d4a8]">Fresh today</p>
-                <h1 className="mt-2 max-w-xl text-4xl font-bold leading-none sm:text-5xl">Ceremonial matcha, made fresh.</h1>
+                <h1 className="mt-2 max-w-xl font-['Merriweather'] text-4xl font-bold leading-tight sm:text-5xl">Ceremonial matcha, made fresh.</h1>
               </div>
               <div className="min-w-48 rounded-md border border-white/10 bg-white/5 p-4">
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Your basket</p>
@@ -147,7 +147,7 @@ export default function App() {
 
             <div className="mb-5 flex items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold">{activeCategory === "All" ? "All drinks" : activeCategory}</h2>
+                <h2 className="font-['Merriweather'] text-2xl font-bold">{activeCategory === "All" ? "All drinks" : activeCategory}</h2>
                 <p className="mt-1 text-sm font-semibold text-slate-500">{visibleItems.length} menu choices</p>
               </div>
               <span className="rounded-full bg-[#e9dfbd] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#5d512f]">Open</span>
@@ -169,7 +169,7 @@ export default function App() {
                       />
                     </div>
                     <div className="px-1 pt-3">
-                      <h3 className="text-sm font-bold leading-tight sm:text-base">{item.name}</h3>
+                      <h3 className="font-['Merriweather'] text-sm font-bold leading-snug sm:text-base">{item.name}</h3>
                       <p className="mt-2 line-clamp-2 text-xs font-medium leading-5 text-slate-500">{item.description}</p>
                     </div>
                     <div className="mt-4 flex items-center justify-between gap-2">
@@ -189,7 +189,7 @@ export default function App() {
             </div>
 
             <section className="mt-6 rounded-lg bg-white p-4 shadow-lg shadow-emerald-950/5" aria-label="Full menu board">
-              <h2 className="text-2xl font-bold">Full menu</h2>
+              <h2 className="font-['Merriweather'] text-2xl font-bold">Full menu</h2>
               <p className="mt-2 text-sm font-medium leading-6 text-slate-500">Classic prices, seasonal powder upgrades, sugar level, and milk options.</p>
               <img src={menuBoardImage} alt="Warunatcha full menu with prices and options" loading="lazy" className="mt-4 max-h-[720px] w-full rounded-md bg-[#f7f2df] object-contain" />
             </section>
@@ -201,7 +201,7 @@ export default function App() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/45">Checkout</p>
-                <h2 className="mt-1 text-2xl font-bold">Shopping basket</h2>
+                <h2 className="mt-1 font-['Merriweather'] text-2xl font-bold">Shopping basket</h2>
               </div>
               <strong className="rounded-full bg-white px-3 py-2 text-sm text-[#123b31]">{formatRupiah(basketTotal)}</strong>
             </div>
@@ -255,7 +255,7 @@ export default function App() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#708b4f]">Customize your drink</p>
-                <h2 className="mt-1 text-2xl font-bold">{customizingItem.name}</h2>
+                <h2 className="mt-1 font-['Merriweather'] text-2xl font-bold">{customizingItem.name}</h2>
                 <p className="mt-1 text-sm font-semibold text-slate-500">Base price {customizingItem.price}</p>
               </div>
               <button type="button" onClick={() => setCustomizingItem(null)} className="grid h-9 w-9 place-items-center rounded-full bg-slate-200 text-xl text-slate-600" aria-label="Close customization">×</button>
