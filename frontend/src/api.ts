@@ -1,6 +1,6 @@
 import { BasketItem } from "./basket";
 
-const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const apiUrl = import.meta.env.VITE_API_URL || "https://warunatcha-api.bbeatrix.workers.dev";
 
 export type OrderPayload = {
   customerName: string;

@@ -21,6 +21,7 @@ export type SugarLevel = 0 | 25 | 50;
 export type MilkOption = "Dairy" | "Oat" | "Houseblend";
 
 const asset = (fileName: string) => `/assets/${encodeURIComponent(fileName)}`;
+const productAsset = (fileName: string) => `${asset(fileName)}?v=2`;
 const fallbackProductImage = asset("Logo no background.PNG");
 
 export const whatsappNumber = "6285959161970";
@@ -54,7 +55,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 52.000",
     priceValue: 52000,
     category: "Matcha",
-    image: asset("OG Matcha Latte.png"),
+    image: productAsset("OG Matcha Latte.png"),
   },
   {
     id: "earl-grey-matcha",
@@ -63,7 +64,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 58.000",
     priceValue: 58000,
     category: "Special",
-    image: asset("Earl Grey Matcha.png"),
+    image: productAsset("Earl Grey Matcha.png"),
     badge: "Signature",
   },
   {
@@ -73,7 +74,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 60.000",
     priceValue: 60000,
     category: "Special",
-    image: asset("Salted Cream Matcha.png"),
+    image: productAsset("Salted Cream Matcha.png"),
   },
   {
     id: "biscoff-matcha",
@@ -82,7 +83,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 72.000",
     priceValue: 72000,
     category: "Special",
-    image: asset("Biscoff Matcha.png"),
+    image: productAsset("Biscoff Matcha.png"),
   },
   {
     id: "cold-whisk-matcha",
@@ -91,7 +92,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 55.000",
     priceValue: 55000,
     category: "Pure Tea",
-    image: asset("Cold Whisk Matcha.png"),
+    image: productAsset("Cold Whisk Matcha.png"),
   },
   {
     id: "peanut-butter-matcha",
@@ -100,7 +101,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 57.000",
     priceValue: 57000,
     category: "Special",
-    image: asset("Peanut Butter Matcha.png"),
+    image: productAsset("Peanut Butter Matcha.png"),
   },
   {
     id: "strawberry-matcha",
@@ -109,7 +110,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 58.000",
     priceValue: 58000,
     category: "Matcha",
-    image: asset("Strawberry Matcha.png"),
+    image: productAsset("Strawberry Matcha.png"),
     badge: "Favorite",
   },
   {
@@ -119,7 +120,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 45.000",
     priceValue: 45000,
     category: "Pure Tea",
-    image: asset("usucha.png"),
+    image: productAsset("usucha.png"),
   },
   {
     id: "cookies-cream-matcha",
@@ -128,7 +129,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 58.000",
     priceValue: 58000,
     category: "Special",
-    image: asset("Cookies & Cream Matcha.png"),
+    image: productAsset("Cookies & Cream Matcha.png"),
   },
 ];
 

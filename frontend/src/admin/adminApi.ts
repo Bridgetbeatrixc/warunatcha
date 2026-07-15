@@ -1,6 +1,6 @@
 import type { AdminOrder, OrderStatus, OrderSummary } from "./types";
 
-const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8787";
+const apiUrl = import.meta.env.VITE_API_URL || "https://warunatcha-api.bbeatrix.workers.dev";
 
 async function adminRequest<T>(path: string, token: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${apiUrl}${path}`, {
