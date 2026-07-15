@@ -366,6 +366,40 @@ a {
   cursor: pointer;
 }
 
+.menu-board-panel {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+  border-radius: 28px;
+  background: #fff;
+  padding: 18px;
+  box-shadow: 0 16px 40px rgba(18, 59, 49, 0.08);
+}
+
+.menu-board-panel h2 {
+  margin: 0;
+  font-family: "Trebuchet MS", "Avenir Next", system-ui, sans-serif;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.menu-board-panel p {
+  max-width: 620px;
+  margin: 6px 0 0;
+  color: #6d7588;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.menu-board-panel img {
+  width: 100%;
+  max-height: 720px;
+  object-fit: contain;
+  border-radius: 22px;
+  background: #f7f2df;
+}
+
 .checkout-column {
   position: sticky;
   top: 20px;

@@ -12,7 +12,7 @@ export type MenuItem = {
 };
 
 const asset = (fileName: string) => `/assets/${encodeURIComponent(fileName)}`;
-const fallbackProductImage = asset("Logo optional 3.jpeg");
+const fallbackProductImage = asset("Logo no background.PNG");
 
 export const whatsappNumber = "6285959161970";
 
@@ -22,18 +22,18 @@ export const menuItems: MenuItem[] = [
   {
     id: "og-matcha-latte",
     name: "OG Matcha Latte",
-    description: "Ceremonial matcha whisked fresh with creamy milk.",
-    price: "Rp 35.000",
-    priceValue: 35000,
+    description: "Classic ceremonial matcha latte with your choice of milk and sugar level.",
+    price: "Rp 52.000",
+    priceValue: 52000,
     category: "Matcha",
     image: asset("OG Matcha Latte.png"),
   },
   {
     id: "earl-grey-matcha",
     name: "Earl Grey Matcha",
-    description: "Bright matcha layered with fragrant earl grey tea notes.",
-    price: "Rp 38.000",
-    priceValue: 38000,
+    description: "Fragrant earl grey tea layered with smooth matcha and creamy milk.",
+    price: "Rp 58.000",
+    priceValue: 58000,
     category: "Special",
     image: asset("Earl Grey Matcha.png"),
     badge: "Signature",
@@ -41,45 +41,45 @@ export const menuItems: MenuItem[] = [
   {
     id: "salted-cream-matcha",
     name: "Salted Cream Matcha",
-    description: "A smooth matcha latte topped with soft salted cream.",
-    price: "Rp 40.000",
-    priceValue: 40000,
+    description: "Classic matcha finished with a rich salted cream top.",
+    price: "Rp 60.000",
+    priceValue: 60000,
     category: "Special",
     image: asset("Salted Cream Matcha.png"),
   },
   {
     id: "biscoff-matcha",
     name: "Biscoff Matcha",
-    description: "Matcha latte with biscoff sweetness and a cozy finish.",
-    price: "Rp 42.000",
-    priceValue: 42000,
+    description: "Premium matcha latte with biscoff spread and crunchy biscoff topping.",
+    price: "Rp 72.000",
+    priceValue: 72000,
     category: "Special",
     image: asset("Biscoff Matcha.png"),
   },
   {
     id: "cold-whisk-matcha",
     name: "Cold Whisk Matcha",
-    description: "Fresh cold-whisked matcha for a lighter, clean taste.",
-    price: "Rp 35.000",
-    priceValue: 35000,
+    description: "Cold-whisked ceremonial matcha with a clean, bold tea-forward profile.",
+    price: "Rp 55.000",
+    priceValue: 55000,
     category: "Pure Tea",
-    image: fallbackProductImage,
+    image: asset("Cold Whisk Matcha.png"),
   },
   {
     id: "peanut-butter-matcha",
     name: "Peanut Butter Matcha",
-    description: "Nutty peanut butter balanced with earthy matcha.",
-    price: "Rp 42.000",
-    priceValue: 42000,
+    description: "Creamy peanut butter matched with earthy ceremonial matcha.",
+    price: "Rp 57.000",
+    priceValue: 57000,
     category: "Special",
     image: asset("Peanut Butter Matcha.png"),
   },
   {
     id: "strawberry-matcha",
     name: "Strawberry Matcha",
-    description: "House strawberry layer, milk, and fresh ceremonial matcha.",
-    price: "Rp 40.000",
-    priceValue: 40000,
+    description: "Strawberry layer, milk, and fresh matcha for a fruity classic.",
+    price: "Rp 58.000",
+    priceValue: 58000,
     category: "Matcha",
     image: asset("Strawberry Matcha.png"),
     badge: "Favorite",
@@ -87,22 +87,23 @@ export const menuItems: MenuItem[] = [
   {
     id: "usucha",
     name: "Usucha",
-    description: "Traditional thin matcha, whisked clean and simple.",
-    price: "Rp 32.000",
-    priceValue: 32000,
+    description: "Traditional thin matcha, whisked simply with water.",
+    price: "Rp 45.000",
+    priceValue: 45000,
     category: "Pure Tea",
-    image: fallbackProductImage,
+    image: asset("usucha.png"),
   },
   {
     id: "cookies-cream-matcha",
     name: "Cookies & Cream Matcha",
-    description: "Creamy matcha latte with cookies and cream comfort.",
-    price: "Rp 42.000",
-    priceValue: 42000,
+    description: "Creamy matcha latte with cookies and cream sweetness.",
+    price: "Rp 58.000",
+    priceValue: 58000,
     category: "Special",
     image: asset("Cookies & Cream Matcha.png"),
   },
 ];
 
 export const howToOrderImage = asset("How to order method.png");
-export const logoImage = asset("Logo main.jpeg");
+export const logoImage = asset("Logo main.png");
+export const menuBoardImage = asset("menu.png");

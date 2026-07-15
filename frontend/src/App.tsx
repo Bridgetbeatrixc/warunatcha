@@ -2,7 +2,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { saveOrder } from "./api";
 import { addItem, BasketItem, formatRupiah, getBasketCount, getBasketTotal, updateQuantity } from "./basket";
 import { buildBasketWhatsappMessage, buildBasketWhatsappUrl } from "./whatsapp";
-import { categories, Category, logoImage, menuItems } from "./menuData";
+import { categories, Category, logoImage, menuBoardImage, menuItems } from "./menuData";
 
 type Customer = {
   name: string;
@@ -174,6 +174,14 @@ function App() {
                 );
               })}
             </div>
+
+            <section className="menu-board-panel" aria-label="Full menu board">
+              <div>
+                <h2>Full menu</h2>
+                <p>Classic prices, seasonal powder upgrades, sugar level, and milk options.</p>
+              </div>
+              <img src={menuBoardImage} alt="Warunatcha full menu with prices and options" loading="lazy" />
+            </section>
           </div>
         </section>
 
