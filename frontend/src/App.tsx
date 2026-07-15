@@ -164,7 +164,7 @@ export default function App() {
                         src={item.image}
                         alt={item.name}
                         loading="lazy"
-                        className="h-full w-full -translate-y-1 object-contain p-1"
+                        className="h-full w-full object-contain p-1"
                         onError={(event) => { event.currentTarget.src = logoImage; }}
                       />
                     </div>
