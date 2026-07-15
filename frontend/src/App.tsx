@@ -157,22 +157,22 @@ export default function App() {
               {visibleItems.map((item) => {
                 const selectedQuantity = basket.filter((basketItem) => basketItem.id === item.id).reduce((total, basketItem) => total + basketItem.quantity, 0);
                 return (
-                  <article key={item.id} className="grid h-full min-h-[340px] grid-rows-[auto_minmax(0,1fr)_auto] rounded-lg border border-slate-100 bg-white p-3 shadow-lg shadow-emerald-950/5 sm:min-h-[420px] sm:p-4 xl:min-h-[500px]">
-                    <div className="relative grid aspect-square place-items-center overflow-hidden rounded-md bg-[#f0eadc]">
+                  <article key={item.id} className="flex h-full flex-col rounded-lg border border-slate-100 bg-white p-3 shadow-lg shadow-emerald-950/5 sm:p-4">
+                    <div className="relative grid aspect-[5/4] place-items-center overflow-hidden rounded-md bg-[#f0eadc]">
                       {item.badge ? <span className="absolute left-2 top-2 z-10 rounded-full bg-[#123b31] px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">{item.badge}</span> : null}
                       <img
                         src={item.image}
                         alt={item.name}
                         loading="lazy"
-                        className="h-full w-full object-contain p-2"
+                        className="h-full w-full -translate-y-1 object-contain p-1"
                         onError={(event) => { event.currentTarget.src = logoImage; }}
                       />
                     </div>
                     <div className="px-1 pt-3">
-                      <h3 className="min-h-10 text-sm font-bold leading-tight sm:text-base">{item.name}</h3>
-                      <p className="mt-2 line-clamp-2 min-h-10 text-xs font-medium leading-5 text-slate-500">{item.description}</p>
+                      <h3 className="text-sm font-bold leading-tight sm:text-base">{item.name}</h3>
+                      <p className="mt-2 line-clamp-2 text-xs font-medium leading-5 text-slate-500">{item.description}</p>
                     </div>
-                    <div className="mt-auto flex items-center justify-between gap-2 pt-4">
+                    <div className="mt-4 flex items-center justify-between gap-2">
                       <strong className="text-sm sm:text-base">{item.price}</strong>
                       <button
                         type="button"
