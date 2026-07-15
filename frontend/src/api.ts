@@ -34,5 +34,5 @@ export async function saveOrder(payload: OrderPayload) {
     throw new Error(data.error || "Order could not be saved.");
   }
 
-  return data as { id: string; storage: "supabase" | "local" };
+  return data as { id: string; orderNumber: number; storage: "supabase" };
 }

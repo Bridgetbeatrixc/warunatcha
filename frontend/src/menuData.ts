@@ -107,3 +107,4 @@ export const menuItems: MenuItem[] = [
 export const howToOrderImage = asset("How to order method.png");
 export const logoImage = asset("Logo main.png");
 export const menuBoardImage = asset("menu.png");
+export const growlaneLogoImage = asset("Growlane AI.png");

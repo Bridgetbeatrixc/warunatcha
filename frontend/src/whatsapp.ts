@@ -15,7 +15,7 @@ export function buildBasketWhatsappMessage(params: {
   customerName: string;
   customerPhone: string;
   items: BasketItem[];
-  orderId?: string;
+  orderNumber?: number;
 }) {
   const itemLines = params.items.map(
     (item, index) =>
@@ -31,7 +31,7 @@ export function buildBasketWhatsappMessage(params: {
     "",
     `Name: ${params.customerName}`,
     `Phone: ${params.customerPhone}`,
-    params.orderId ? `Order ID: ${params.orderId}` : "",
+    params.orderNumber ? `Order number: #${params.orderNumber}` : "",
     "",
     "Please confirm availability and payment details. Thank you.",
   ]

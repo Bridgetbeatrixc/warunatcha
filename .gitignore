@@ -9,3 +9,5 @@ backend/data/
 .env
 frontend/.env
 backend/.env
+backend/.dev.vars
+.dev.vars

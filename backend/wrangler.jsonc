@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "warunatcha-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-10",
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "FRONTEND_ORIGINS": "http://localhost:5174,https://warunatcha.vercel.app",
+    "ADMIN_EMAILS": "owner@example.com"
+  }
+}

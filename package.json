@@ -3,6 +3,9 @@
     "dev": "npm --prefix frontend run dev",
     "dev:backend": "npm --prefix backend run dev",
     "build": "npm --prefix frontend run build",
+    "build:backend": "npm --prefix backend run typecheck",
+    "test:backend": "npm --prefix backend test",
+    "deploy:backend": "npm --prefix backend run deploy",
     "preview": "npm --prefix frontend run preview"
   },
   "private": true

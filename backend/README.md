@@ -1,29 +1,39 @@
-# Backend
+# Warunatcha Cloudflare Worker
 
-Small Express API for saving customer orders before the frontend opens WhatsApp.
+This Worker saves customer orders to Supabase and exposes protected order-management endpoints for the `/admin` dashboard.
 
-## Setup
+## Supabase setup
 
-1. Copy `.env.example` to `.env`.
-2. Add Supabase credentials when ready.
-3. Run `npm install`.
-4. Run `npm run dev`.
+1. Rotate the database password that was shared in chat. The Worker does not need that password.
+2. Run `supabase/migrations/001_create_orders.sql` in the Supabase SQL editor.
+3. Disable public user signup in Supabase Auth and create the administrator account manually.
+4. Copy `.dev.vars.example` to `.dev.vars` for local development.
+5. Use the project URL and a Supabase secret/service-role key. Never use the secret key in the frontend.
 
-If Supabase credentials are not set, orders are saved locally to `backend/data/orders.json` for development.
+## Cloudflare setup
 
-## Supabase Table
+Update `FRONTEND_ORIGINS` and `ADMIN_EMAILS` in `wrangler.jsonc`, then configure encrypted secrets:
 
-Run this SQL in Supabase:
-
-```sql
-create table if not exists public.orders (
-  id uuid primary key default gen_random_uuid(),
-  customer_name text not null,
-  customer_phone text not null,
-  items jsonb not null,
-  total_amount integer not null default 0,
-  whatsapp_message text not null,
-  status text not null default 'new',
-  created_at timestamptz not null default now()
-);
+```bash
+npx wrangler secret put SUPABASE_URL
+npx wrangler secret put SUPABASE_SECRET_KEY
 ```
+
+Install and verify locally:
+
+```bash
+npm install
+npm run typecheck
+npm test
+npm run dev
+```
+
+Deploy with `npm run deploy`. Add the resulting Worker URL to the frontend as `VITE_API_URL`.
+
+## API
+
+- `GET /api/health`
+- `POST /api/orders`
+- `GET /api/orders` (admin bearer token required)
+- `GET /api/orders/summary` (admin bearer token required)
+- `PATCH /api/orders/:id/status` (admin bearer token required)
