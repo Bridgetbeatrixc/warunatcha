@@ -132,11 +132,11 @@ export default function App() {
               <span className="rounded-full bg-[#e9dfbd] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#5d512f]">Open</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+            <div className="grid grid-cols-2 items-stretch gap-3 md:grid-cols-3 md:gap-4">
               {visibleItems.map((item) => {
                 const selectedQuantity = basket.find((basketItem) => basketItem.id === item.id)?.quantity || 0;
                 return (
-                  <article key={item.id} className="flex min-h-[310px] flex-col rounded-lg border border-slate-100 bg-white p-3 shadow-lg shadow-emerald-950/5 sm:min-h-[352px] sm:p-4">
+                  <article key={item.id} className="grid h-full min-h-[340px] grid-rows-[auto_minmax(0,1fr)_auto] rounded-lg border border-slate-100 bg-white p-3 shadow-lg shadow-emerald-950/5 sm:min-h-[420px] sm:p-4 xl:min-h-[500px]">
                     <div className="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-md bg-[#f0eadc]">
                       {item.badge ? <span className="absolute left-2 top-2 z-10 rounded-full bg-[#123b31] px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">{item.badge}</span> : null}
                       <img
