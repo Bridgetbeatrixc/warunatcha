@@ -275,7 +275,7 @@ a {
 
 .product-card {
   display: flex;
-  min-height: 286px;
+  min-height: 352px;
   flex-direction: column;
   border: 1px solid rgba(23, 35, 56, 0.06);
   border-radius: 24px;
@@ -287,7 +287,7 @@ a {
 .product-image {
   position: relative;
   display: grid;
-  height: 138px;
+  height: 206px;
   place-items: center;
   overflow: hidden;
   border-radius: 18px;
@@ -313,7 +313,7 @@ a {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 8px;
+  padding: 10px;
 }
 
 .product-copy {
@@ -638,13 +638,13 @@ a {
   }
 
   .product-card {
-    min-height: 254px;
+    min-height: 310px;
     border-radius: 20px;
     padding: 11px;
   }
 
   .product-image {
-    height: 112px;
+    height: 166px;
     border-radius: 16px;
   }
 
