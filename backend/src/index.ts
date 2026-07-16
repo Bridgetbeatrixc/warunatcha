@@ -17,6 +17,16 @@ function origins(env: Bindings) {
   return new Set(env.FRONTEND_ORIGINS.split(",").map((value) => value.trim()).filter(Boolean));
 }
 
+function isAllowedOrigin(origin: string, env: Bindings) {
+  if (origins(env).has(origin)) return true;
+  try {
+    const url = new URL(origin);
+    return url.protocol === "https:" && /^warunatcha(?:-[a-z0-9-]+)?\.vercel\.app$/i.test(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
 function database(c: AppContext) {
   return createClient(c.env.SUPABASE_URL, c.env.SUPABASE_SECRET_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
@@ -38,10 +48,11 @@ async function requireAdmin(c: AppContext) {
 
 app.use("/api/*", async (c, next) => {
   const origin = c.req.header("Origin");
-  if (origin && !origins(c.env).has(origin)) return c.json({ error: "Origin is not allowed." }, 403);
+  const allowedOrigin = origin && isAllowedOrigin(origin, c.env) ? origin : undefined;
+  if (origin && !allowedOrigin) return c.json({ error: "Origin is not allowed." }, 403);
 
   if (c.req.method === "OPTIONS") {
-    if (origin) c.header("Access-Control-Allow-Origin", origin);
+    if (allowedOrigin) c.header("Access-Control-Allow-Origin", allowedOrigin);
     c.header("Access-Control-Allow-Headers", "Authorization, Content-Type");
     c.header("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
     c.header("Access-Control-Max-Age", "86400");
@@ -49,8 +60,8 @@ app.use("/api/*", async (c, next) => {
   }
 
   await next();
-  if (origin) {
-    c.header("Access-Control-Allow-Origin", origin);
+  if (allowedOrigin) {
+    c.header("Access-Control-Allow-Origin", allowedOrigin);
     c.header("Vary", "Origin");
   }
 });
@@ -84,7 +95,10 @@ app.post("/api/orders", async (c) => {
     .single();
   if (error || !data) {
     console.error("order_insert_failed", error?.message);
-    return c.json({ error: "Order could not be saved." }, 500);
+    if (error?.code === "PGRST205") {
+      return c.json({ error: "Orders are not ready yet. The store database setup needs to be completed." }, 503);
+    }
+    return c.json({ error: "Order could not be saved. Please try again." }, 500);
   }
   return c.json({ id: data.id, orderNumber: data.order_number, storage: "supabase" }, 201);
 });

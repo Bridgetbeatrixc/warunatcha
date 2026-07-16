@@ -129,7 +129,7 @@ export const menuItems: MenuItem[] = [
     price: "Rp 58.000",
     priceValue: 58000,
     category: "Special",
-    image: productAsset("Cookies & Cream Matcha.png"),
+    image: productAsset("cookies-cream.png"),
   },
 ];
 
