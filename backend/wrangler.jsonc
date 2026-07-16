@@ -8,6 +8,6 @@
   },
   "vars": {
     "FRONTEND_ORIGINS": "http://localhost:5174,https://warunatcha-umber.vercel.app",
-    "ADMIN_EMAILS": "bridgetbeatrixc@gmail.com"
+    "ADMIN_EMAILS": "bridgetbeatrixc@gmail.com,bbeatrix@student.ciputra.ac.id"
   }
 }
