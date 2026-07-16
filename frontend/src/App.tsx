@@ -158,13 +158,13 @@ export default function App() {
                 const selectedQuantity = basket.filter((basketItem) => basketItem.id === item.id).reduce((total, basketItem) => total + basketItem.quantity, 0);
                 return (
                   <article key={item.id} className="flex h-full flex-col rounded-lg border border-slate-100 bg-white p-3 shadow-lg shadow-emerald-950/5 sm:p-4">
-                    <div className="relative grid aspect-[5/4] place-items-center overflow-hidden rounded-md bg-[#f0eadc]">
+                    <div className="relative grid aspect-[5/4] place-items-center rounded-md bg-[#f0eadc] p-3">
                       {item.badge ? <span className="absolute left-2 top-2 z-10 rounded-full bg-[#123b31] px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">{item.badge}</span> : null}
                       <img
                         src={item.image}
                         alt={item.name}
                         loading="lazy"
-                        className="h-full w-full object-contain p-1"
+                        className="max-h-full max-w-full object-contain object-center"
                         onError={(event) => { event.currentTarget.src = logoImage; }}
                       />
                     </div>
