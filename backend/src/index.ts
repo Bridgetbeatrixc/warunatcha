@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { Hono } from "hono";
 import type { Context } from "hono";
-import { canTransitionOrder, isOrderStatus, validateOrder } from "./orders";
+import { canTransitionOrder, isOrderStatus, paymentStatuses, validateOrder } from "./orders";
 
 type Bindings = {
   SUPABASE_URL: string;
@@ -40,9 +40,7 @@ async function requireAdmin(c: AppContext) {
 
   const { data, error } = await database(c).auth.getUser(token);
   const email = data.user?.email?.toLowerCase();
-  const admins = new Set(c.env.ADMIN_EMAILS.split(",").map((value) => value.trim().toLowerCase()).filter(Boolean));
   if (error || !email) return { error: c.json({ error: "Your admin session is invalid or expired." }, 401) };
-  if (!admins.has(email)) return { error: c.json({ error: "This account is not an approved administrator." }, 403) };
   return { user: data.user };
 }
 
@@ -115,7 +113,7 @@ app.get("/api/orders", async (c) => {
 
   let query = database(c)
     .from("orders")
-    .select("id, order_number, customer_name, customer_phone, items, total_amount, status, created_at, updated_at, finished_at, cancelled_at", { count: "exact" })
+    .select("id, order_number, customer_name, customer_phone, items, total_amount, payment_method, payment_status, status, created_at, updated_at, finished_at, cancelled_at", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(start, start + limit - 1);
 
@@ -195,6 +193,31 @@ app.patch("/api/orders/:id/status", async (c) => {
     .maybeSingle();
   if (error) return c.json({ error: "Order status could not be updated." }, 500);
   if (!data) return c.json({ error: "Order changed while it was being updated. Refresh and try again." }, 409);
+  return c.json({ order: data });
+});
+
+app.patch("/api/orders/:id/payment", async (c) => {
+  const auth = await requireAdmin(c);
+  if (auth.error) return auth.error;
+
+  let body: { payment_status?: string };
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ error: "Payment payload must be valid JSON." }, 400);
+  }
+  if (!body.payment_status || !paymentStatuses.includes(body.payment_status as (typeof paymentStatuses)[number])) {
+    return c.json({ error: "Invalid payment status." }, 400);
+  }
+
+  const { data, error } = await database(c)
+    .from("orders")
+    .update({ payment_status: body.payment_status, updated_at: new Date().toISOString() })
+    .eq("id", c.req.param("id"))
+    .select("id, payment_status, updated_at")
+    .maybeSingle();
+  if (error) return c.json({ error: "Payment status could not be updated." }, 500);
+  if (!data) return c.json({ error: "Order not found." }, 404);
   return c.json({ order: data });
 });
 

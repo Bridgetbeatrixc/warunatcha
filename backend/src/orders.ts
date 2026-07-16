@@ -2,6 +2,10 @@ import { catalogById, iceOptionById, matchaServiceById, milkOptions, seasonalAdd
 
 export const orderStatuses = ["new", "preparing", "finished", "cancelled"] as const;
 export type OrderStatus = (typeof orderStatuses)[number];
+export const paymentMethods = ["BCA", "OVO", "GoPay", "SeaBank"] as const;
+export type PaymentMethod = (typeof paymentMethods)[number];
+export const paymentStatuses = ["unpaid", "paid"] as const;
+export type PaymentStatus = (typeof paymentStatuses)[number];
 
 export type SafeOrderItem = {
   id: string;
@@ -17,6 +21,8 @@ export type NewOrder = {
   total_amount: number;
   whatsapp_message: string;
   status: "new";
+  payment_method: PaymentMethod;
+  payment_status: "unpaid";
 };
 
 type ValidationResult = { order: NewOrder } | { error: string };
@@ -29,6 +35,7 @@ export function validateOrder(payload: unknown): ValidationResult {
   const customerPhone = String(input.customerPhone ?? "").replace(/[^\d+]/g, "");
   const requestedItems = Array.isArray(input.items) ? input.items : [];
   const whatsappMessage = String(input.whatsappMessage ?? "").trim().slice(0, 4000);
+  const paymentMethod = String(input.paymentMethod ?? "");
 
   if (customerName.length < 2 || customerName.length > 100) {
     return { error: "Customer name must be between 2 and 100 characters." };
@@ -39,6 +46,7 @@ export function validateOrder(payload: unknown): ValidationResult {
   if (requestedItems.length === 0 || requestedItems.length > 20) {
     return { error: "Basket must contain between 1 and 20 menu items." };
   }
+  if (!paymentMethods.includes(paymentMethod as PaymentMethod)) return { error: "Select a valid payment method." };
 
   const items: SafeOrderItem[] = [];
   for (const rawItem of requestedItems) {
@@ -77,6 +85,8 @@ export function validateOrder(payload: unknown): ValidationResult {
       total_amount: items.reduce((total, item) => total + item.price * item.quantity, 0),
       whatsapp_message: whatsappMessage,
       status: "new",
+      payment_method: paymentMethod as PaymentMethod,
+      payment_status: "unpaid",
     },
   };
 }

@@ -8,6 +8,7 @@ describe("validateOrder", () => {
       customerPhone: "0812 3456 7890",
       items: [{ id: "og-matcha-latte", name: "Fake", quantity: 2, price: 1 }],
       whatsappMessage: "Order",
+      paymentMethod: "BCA",
     });
     expect("order" in result && result.order.total_amount).toBe(104000);
     expect("order" in result && result.order.items[0].name).toBe("OG Matcha Latte");
@@ -18,6 +19,7 @@ describe("validateOrder", () => {
       customerName: "Bridget",
       customerPhone: "081234567890",
       items: [{ id: "og-matcha-latte", quantity: 1, seasonalAddOnId: "isuzu", sugarLevel: 0, milkOption: "Oat" }],
+      paymentMethod: "OVO",
     });
 
     expect("order" in result && result.order.total_amount).toBe(77000);
@@ -35,6 +37,7 @@ describe("validateOrder", () => {
       customerName: "Bridget",
       customerPhone: "081234567890",
       items: [{ id: "og-matcha-latte", quantity: 1, iceOptionId: "ice-pisah", matchaServiceId: "matcha-mini-cup" }],
+      paymentMethod: "SeaBank",
     });
 
     expect("order" in result && result.order.total_amount).toBe(53020);
@@ -43,7 +46,7 @@ describe("validateOrder", () => {
   });
 
   it("rejects unknown products and excessive quantities", () => {
-    const base = { customerName: "Bridget", customerPhone: "081234567890" };
+    const base = { customerName: "Bridget", customerPhone: "081234567890", paymentMethod: "BCA" };
     const unknown = validateOrder({ ...base, items: [{ id: "unknown", quantity: 1 }] });
     const excessive = validateOrder({ ...base, items: [{ id: "usucha", quantity: 21 }] });
     expect("error" in unknown && unknown.error).toContain("unknown");

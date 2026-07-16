@@ -14,21 +14,14 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { formatRupiah } from "../basket";
 import { GrowlaneLogo } from "../BrandCredit";
 import { logoImage } from "../menuData";
-import { getOrders, getOrderSummary, setOrderStatus } from "./adminApi";
+import { getOrders, getOrderSummary, setOrderStatus, setPaymentStatus } from "./adminApi";
 import { adminSupabase, hasSupabaseConfig } from "./supabase";
-import type { AdminOrder, OrderStatus, OrderSummary } from "./types";
+import type { AdminOrder, OrderStatus, OrderSummary, PaymentStatus } from "./types";
 
 const statuses: Array<OrderStatus | "all"> = ["all", "new", "preparing", "finished", "cancelled"];
 const emptySummary: OrderSummary = { total: 0, new: 0, preparing: 0, finished: 0, cancelled: 0, revenue: 0 };
-const approvedAdminEmails = new Set(
-  (import.meta.env.VITE_ADMIN_EMAILS || "bridgetbeatrixc@gmail.com")
-    .split(",")
-    .map((email: string) => email.trim().toLowerCase())
-    .filter(Boolean),
-);
-
 function isApprovedAdmin(session: Session | null) {
-  return Boolean(session?.user.email && approvedAdminEmails.has(session.user.email.toLowerCase()));
+  return Boolean(session?.user.email);
 }
 
 const statusColors: Record<OrderStatus, string> = {
@@ -65,7 +58,7 @@ function AdminLogin({ onSession }: { onSession: (session: Session) => void }) {
     }
     if (!isApprovedAdmin(data.session)) {
       await adminSupabase.auth.signOut();
-      setError("This account is not approved for the order dashboard.");
+      setError("A valid Supabase account is required for the order dashboard.");
       return;
     }
     onSession(data.session);
@@ -175,6 +168,19 @@ function Dashboard({ session }: { session: Session }) {
       await loadData(true);
     } catch (updateError) {
       setError(updateError instanceof Error ? updateError.message : "Order could not be updated.");
+    } finally {
+      setUpdatingId("");
+    }
+  }
+
+  async function updatePayment(order: AdminOrder, nextStatus: PaymentStatus) {
+    setUpdatingId(order.id);
+    setError("");
+    try {
+      await setPaymentStatus(session.access_token, order.id, nextStatus);
+      await loadData(true);
+    } catch (updateError) {
+      setError(updateError instanceof Error ? updateError.message : "Payment status could not be updated.");
     } finally {
       setUpdatingId("");
     }
@@ -302,13 +308,19 @@ function Dashboard({ session }: { session: Session }) {
                     <div key={item.id} className="flex justify-between gap-3">
                       <div>
                         <p>{item.name}</p>
-                        {item.options ? <p className="text-[10px] text-slate-400">{item.options.seasonalAddOn} · {item.options.sugarLevel}% · {item.options.milkOption}</p> : null}
+                        {item.options ? <p className="text-[10px] text-slate-400">{item.options.seasonalAddOn} · {item.options.sugarLevel}% · {item.options.milkOption} · {item.options.iceOption} · {item.options.matchaService}</p> : null}
                       </div>
                       <strong className="text-slate-800">x{item.quantity}</strong>
                     </div>
                   ))}
                 </div>
-                <strong className="text-sm text-slate-900">{formatRupiah(order.total_amount)}</strong>
+                <div>
+                  <strong className="text-sm text-slate-900">{formatRupiah(order.total_amount)}</strong>
+                  <p className="mt-1 text-xs font-semibold text-slate-500">{order.payment_method}</p>
+                  <button type="button" onClick={() => void updatePayment(order, order.payment_status === "paid" ? "unpaid" : "paid")} disabled={updatingId === order.id} className={`mt-2 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide transition disabled:opacity-50 ${order.payment_status === "paid" ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200" : "bg-rose-100 text-rose-800 hover:bg-rose-200"}`}>
+                    {order.payment_status === "paid" ? "Paid" : "Unpaid"}
+                  </button>
+                </div>
                 <span className={`w-fit rounded-full px-3 py-1 text-xs font-bold capitalize ${statusColors[order.status]}`}>{order.status}</span>
                 <div className="flex flex-wrap gap-2">
                   {order.status === "new" ? (

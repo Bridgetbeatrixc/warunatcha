@@ -15,6 +15,7 @@ export function buildBasketWhatsappMessage(params: {
   customerName: string;
   customerPhone: string;
   items: BasketItem[];
+  paymentMethod: "BCA" | "OVO" | "GoPay" | "SeaBank";
   orderNumber?: number;
 }) {
   const itemLines = params.items.map(
@@ -31,6 +32,7 @@ export function buildBasketWhatsappMessage(params: {
     "",
     `Name: ${params.customerName}`,
     `Phone: ${params.customerPhone}`,
+    `Payment method: ${params.paymentMethod}`,
     params.orderNumber ? `Order number: #${params.orderNumber}` : "",
     "",
     "Please confirm availability and payment details. Thank you.",

@@ -21,6 +21,7 @@ export default function App() {
   const [selectedMilk, setSelectedMilk] = useState<MilkOption>("Dairy");
   const [selectedIce, setSelectedIce] = useState(iceOptions[1]);
   const [selectedMatchaService, setSelectedMatchaService] = useState(matchaServiceOptions[0]);
+  const [paymentMethod, setPaymentMethod] = useState<"BCA" | "OVO" | "GoPay" | "SeaBank">("BCA");
 
   const basketCount = getBasketCount(basket);
   const basketTotal = getBasketTotal(basket);
@@ -63,6 +64,7 @@ export default function App() {
       customerName: customer.name,
       customerPhone: customer.phone,
       items: basket,
+      paymentMethod,
     });
 
     try {
@@ -70,12 +72,14 @@ export default function App() {
         customerName: customer.name,
         customerPhone: customer.phone,
         items: basket,
+        paymentMethod,
         whatsappMessage: baseMessage,
       });
       const whatsappMessage = buildBasketWhatsappMessage({
         customerName: customer.name,
         customerPhone: customer.phone,
         items: basket,
+        paymentMethod,
         orderNumber: savedOrder.orderNumber,
       });
       setCheckoutState("saved");
@@ -246,6 +250,15 @@ export default function App() {
                 <input value={customer.phone} onChange={(event) => setCustomer((current) => ({ ...current, phone: event.target.value }))} className="h-12 w-full rounded-md border border-white/10 bg-white/10 px-4 font-semibold text-white outline-none placeholder:text-white/30 focus:border-white/30" placeholder="08xxxxxxxxxx" inputMode="tel" required />
               </label>
             </div>
+
+            <fieldset className="mt-5">
+              <legend className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/50">Payment method</legend>
+              <div className="grid grid-cols-2 gap-2">
+                {(["BCA", "OVO", "GoPay", "SeaBank"] as const).map((method) => (
+                  <button key={method} type="button" onClick={() => setPaymentMethod(method)} className={`rounded-md border px-3 py-3 text-left text-sm font-bold transition ${paymentMethod === method ? "border-[#f2c46b] bg-[#f2c46b] text-[#123b31]" : "border-white/10 bg-white/10 text-white hover:bg-white/15"}`}>{method}</button>
+                ))}
+              </div>
+            </fieldset>
 
             <div className="mt-5 overflow-hidden rounded-md bg-white">
               <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 text-[#123b31]"><span className="text-sm font-bold">To be paid</span><strong>{formatRupiah(basketTotal)}</strong></div>

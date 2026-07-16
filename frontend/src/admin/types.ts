@@ -1,4 +1,6 @@
 export type OrderStatus = "new" | "preparing" | "finished" | "cancelled";
+export type PaymentStatus = "unpaid" | "paid";
+export type PaymentMethod = "BCA" | "OVO" | "GoPay" | "SeaBank";
 
 export type AdminOrderItem = {
   id: string;
@@ -21,6 +23,8 @@ export type AdminOrder = {
   customer_phone: string;
   items: AdminOrderItem[];
   total_amount: number;
+  payment_method: PaymentMethod;
+  payment_status: PaymentStatus;
   status: OrderStatus;
   created_at: string;
   updated_at: string;
