@@ -21,6 +21,11 @@ export type SugarLevel = 0 | 25 | 50;
 export type MilkOption = "Dairy" | "Oat" | "Houseblend";
 export type IceOption = "No ice" | "Ice gabung" | "Ice pisah";
 export type MatchaServiceOption = "Matcha digabung" | "Matcha dipisah (mini cup)";
+export type MenuNavGroup = {
+  id: "best-seller" | "signature" | "new";
+  label: string;
+  itemIds: string[];
+};
 
 const asset = (fileName: string) => `/assets/${encodeURIComponent(fileName)}`;
 const productAsset = (fileName: string) => `${asset(fileName)}?v=2`;
@@ -141,6 +146,24 @@ export const menuItems: MenuItem[] = [
     priceValue: 58000,
     category: "Special",
     image: productAsset("cookies-cream.png"),
+  },
+];
+
+export const menuNavGroups: MenuNavGroup[] = [
+  {
+    id: "best-seller",
+    label: "Best seller KSH",
+    itemIds: ["cold-whisk-matcha", "peanut-butter-matcha", "salted-cream-matcha", "strawberry-matcha"],
+  },
+  {
+    id: "signature",
+    label: "Signature",
+    itemIds: ["og-matcha-latte", "cold-whisk-matcha", "usucha"],
+  },
+  {
+    id: "new",
+    label: "New",
+    itemIds: ["biscoff-matcha"],
   },
 ];
 

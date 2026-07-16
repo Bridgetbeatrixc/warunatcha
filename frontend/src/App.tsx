@@ -4,12 +4,12 @@ import { saveOrder } from "./api";
 import { addConfiguredItem, BasketItem, formatRupiah, getBasketCount, getBasketTotal, updateQuantity } from "./basket";
 import { BrandCredit } from "./BrandCredit";
 import { buildBasketWhatsappMessage, buildBasketWhatsappUrl } from "./whatsapp";
-import { categories, Category, iceOptions, logoImage, matchaServiceOptions, menuBoardImage, menuItems, milkOptions, seasonalAddOns, SugarLevel, sugarLevels, MilkOption } from "./menuData";
+import { iceOptions, logoImage, matchaServiceOptions, menuBoardImage, menuItems, menuNavGroups, milkOptions, seasonalAddOns, SugarLevel, sugarLevels, MilkOption } from "./menuData";
 
 type Customer = { name: string; phone: string };
 
 export default function App() {
-  const [activeCategory, setActiveCategory] = useState<Category>("All");
+  const [activeGroup, setActiveGroup] = useState<"best-seller" | "signature" | "new">("best-seller");
   const [query, setQuery] = useState("");
   const [basket, setBasket] = useState<BasketItem[]>([]);
   const [customer, setCustomer] = useState<Customer>({ name: "", phone: "" });
@@ -26,12 +26,13 @@ export default function App() {
   const basketTotal = getBasketTotal(basket);
   const visibleItems = useMemo(() => {
     const search = query.trim().toLowerCase();
+    const activeIds = new Set(menuNavGroups.find((group) => group.id === activeGroup)?.itemIds ?? []);
     return menuItems.filter((item) => {
-      const categoryMatch = activeCategory === "All" || item.category === activeCategory;
+      const groupMatch = activeIds.has(item.id);
       const queryMatch = !search || item.name.toLowerCase().includes(search) || item.description.toLowerCase().includes(search);
-      return categoryMatch && queryMatch;
+      return groupMatch && queryMatch;
     });
-  }, [activeCategory, query]);
+  }, [activeGroup, query]);
 
   function openCustomization(item: (typeof menuItems)[number]) {
     setCustomizingItem(item);
@@ -130,7 +131,6 @@ export default function App() {
                 value={query}
                 onChange={(event) => {
                   setQuery(event.target.value);
-                  if (event.target.value.trim()) setActiveCategory("All");
                 }}
                 className="h-12 w-full rounded-full border border-white/10 bg-[#0d2d26] pl-11 pr-4 text-sm font-semibold text-white outline-none placeholder:text-white/35 focus:border-white/30"
                 placeholder="Search the menu"
@@ -141,22 +141,22 @@ export default function App() {
           </header>
 
           <div className="rounded-t-lg bg-[#f9f5ea] px-4 pb-8 pt-5 sm:px-7">
-            <nav className="grid grid-cols-4 gap-1 pb-4 sm:flex sm:gap-2" aria-label="Menu categories">
-              {categories.map((category) => (
+            <nav className="grid grid-cols-3 gap-1 pb-4 sm:gap-2" aria-label="Menu highlights">
+              {menuNavGroups.map((group) => (
                 <button
-                  key={category}
+                  key={group.id}
                   type="button"
-                  onClick={() => setActiveCategory(category)}
-                  className={`min-w-0 rounded-full border px-2 py-3 text-xs font-bold transition sm:shrink-0 sm:px-5 sm:text-sm ${activeCategory === category ? "border-[#123b31] bg-[#123b31] text-white shadow-lg shadow-emerald-950/10" : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"}`}
+                  onClick={() => { setActiveGroup(group.id); setQuery(""); }}
+                  className={`min-w-0 rounded-full border px-2 py-3 text-[11px] font-bold transition sm:px-5 sm:text-sm ${activeGroup === group.id ? "border-[#123b31] bg-[#123b31] text-white shadow-lg shadow-emerald-950/10" : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"}`}
                 >
-                  {category}
+                  {group.label}
                 </button>
               ))}
             </nav>
 
             <div className="mb-5 flex items-center justify-between gap-4">
               <div>
-                <h2 className="font-['Merriweather'] text-2xl font-bold">{activeCategory === "All" ? "All drinks" : activeCategory}</h2>
+                <h2 className="font-['Merriweather'] text-2xl font-bold">{menuNavGroups.find((group) => group.id === activeGroup)?.label}</h2>
                 <p className="mt-1 text-sm font-semibold text-slate-500">{visibleItems.length} menu choices</p>
               </div>
               <span className="rounded-full bg-[#e9dfbd] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#5d512f]">Open</span>
