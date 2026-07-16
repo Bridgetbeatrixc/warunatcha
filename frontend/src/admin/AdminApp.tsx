@@ -20,6 +20,16 @@ import type { AdminOrder, OrderStatus, OrderSummary } from "./types";
 
 const statuses: Array<OrderStatus | "all"> = ["all", "new", "preparing", "finished", "cancelled"];
 const emptySummary: OrderSummary = { total: 0, new: 0, preparing: 0, finished: 0, cancelled: 0, revenue: 0 };
+const approvedAdminEmails = new Set(
+  (import.meta.env.VITE_ADMIN_EMAILS || "bridgetbeatrixc@gmail.com")
+    .split(",")
+    .map((email: string) => email.trim().toLowerCase())
+    .filter(Boolean),
+);
+
+function isApprovedAdmin(session: Session | null) {
+  return Boolean(session?.user.email && approvedAdminEmails.has(session.user.email.toLowerCase()));
+}
 
 const statusColors: Record<OrderStatus, string> = {
   new: "bg-amber-100 text-amber-800",
@@ -51,6 +61,11 @@ function AdminLogin({ onSession }: { onSession: (session: Session) => void }) {
     setLoading(false);
     if (loginError || !data.session) {
       setError(loginError?.message || "Login failed.");
+      return;
+    }
+    if (!isApprovedAdmin(data.session)) {
+      await adminSupabase.auth.signOut();
+      setError("This account is not approved for the order dashboard.");
       return;
     }
     onSession(data.session);
@@ -351,15 +366,24 @@ export default function AdminApp() {
   const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
-    if (!adminSupabase) {
+    const supabase = adminSupabase;
+    if (!supabase) {
       setCheckingSession(false);
       return;
     }
-    void adminSupabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
+    void supabase.auth.getSession().then(({ data }) => {
+      setSession(isApprovedAdmin(data.session) ? data.session : null);
+      if (data.session && !isApprovedAdmin(data.session)) void supabase.auth.signOut();
       setCheckingSession(false);
     });
-    const { data } = adminSupabase.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession));
+    const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      if (nextSession && !isApprovedAdmin(nextSession)) {
+        setSession(null);
+        void supabase.auth.signOut();
+        return;
+      }
+      setSession(nextSession);
+    });
     return () => data.subscription.unsubscribe();
   }, []);
 
