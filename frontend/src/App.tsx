@@ -122,7 +122,10 @@ export default function App() {
               <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
               <input
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  if (event.target.value.trim()) setActiveCategory("All");
+                }}
                 className="h-12 w-full rounded-full border border-white/10 bg-[#0d2d26] pl-11 pr-4 text-sm font-semibold text-white outline-none placeholder:text-white/35 focus:border-white/30"
                 placeholder="Search the menu"
                 type="search"
@@ -164,7 +167,7 @@ export default function App() {
                         src={item.image}
                         alt={item.name}
                         loading="lazy"
-                        className="h-full min-h-0 w-auto max-w-full object-contain object-center"
+                        className="h-[88%] min-h-0 w-auto max-w-full object-contain object-center"
                         onError={(event) => { event.currentTarget.src = logoImage; }}
                       />
                     </div>
@@ -172,7 +175,7 @@ export default function App() {
                       <h3 className="font-['Merriweather'] text-sm font-bold leading-snug sm:text-base">{item.name}</h3>
                       <p className="mt-2 line-clamp-2 text-xs font-medium leading-5 text-slate-500">{item.description}</p>
                     </div>
-                    <div className="mt-4 flex items-center justify-between gap-2">
+                    <div className="mt-auto flex items-center justify-between gap-2 pt-4">
                       <strong className="text-sm sm:text-base">{item.price}</strong>
                       <button
                         type="button"
@@ -186,6 +189,7 @@ export default function App() {
                   </article>
                 );
               })}
+              {visibleItems.length === 0 ? <p className="col-span-full rounded-md border border-dashed border-slate-300 px-4 py-10 text-center text-sm font-semibold text-slate-500">No drinks match that search.</p> : null}
             </div>
 
             <section className="mt-6 rounded-lg bg-white p-4 shadow-lg shadow-emerald-950/5" aria-label="Full menu board">
