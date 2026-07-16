@@ -9,6 +9,8 @@ export type AdminOrderItem = {
     seasonalAddOn: string;
     sugarLevel: number;
     milkOption: string;
+    iceOption: string;
+    matchaService: string;
   };
 };
 

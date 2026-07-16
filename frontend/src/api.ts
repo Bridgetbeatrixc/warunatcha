@@ -27,6 +27,8 @@ export async function saveOrder(payload: OrderPayload) {
         seasonalAddOnId: item.seasonalAddOn.id,
         sugarLevel: item.sugarLevel,
         milkOption: item.milkOption,
+        iceOptionId: item.iceOption.id,
+        matchaServiceId: item.matchaService.id,
       })),
     }),
   });

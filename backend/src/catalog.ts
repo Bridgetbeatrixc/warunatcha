@@ -1,5 +1,6 @@
 export type CatalogItem = { id: string; name: string; price: number };
 export type SeasonalAddOn = { id: string; name: string; price: number };
+export type DrinkOption = { id: string; name: string; price: number };
 
 export const catalog: CatalogItem[] = [
   { id: "og-matcha-latte", name: "OG Matcha Latte", price: 52000 },
@@ -32,5 +33,16 @@ export const seasonalAddOns: SeasonalAddOn[] = [
 ];
 
 export const seasonalAddOnById = new Map(seasonalAddOns.map((item) => [item.id, item]));
+export const iceOptions: DrinkOption[] = [
+  { id: "no-ice", name: "No ice", price: 0 },
+  { id: "ice-gabung", name: "Ice gabung", price: 0 },
+  { id: "ice-pisah", name: "Ice pisah", price: 320 },
+];
+export const iceOptionById = new Map(iceOptions.map((item) => [item.id, item]));
+export const matchaServiceOptions: DrinkOption[] = [
+  { id: "matcha-gabung", name: "Matcha digabung", price: 0 },
+  { id: "matcha-mini-cup", name: "Matcha dipisah (mini cup)", price: 700 },
+];
+export const matchaServiceById = new Map(matchaServiceOptions.map((item) => [item.id, item]));
 export const sugarLevels = [0, 25, 50] as const;
 export const milkOptions = ["Dairy", "Oat", "Houseblend"] as const;

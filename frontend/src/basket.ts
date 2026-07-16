@@ -1,4 +1,4 @@
-import { MenuItem, MilkOption, SeasonalAddOn, SugarLevel } from "./menuData";
+import { IceOption, MatchaServiceOption, MenuItem, MilkOption, SeasonalAddOn, SugarLevel } from "./menuData";
 
 export type BasketItem = Pick<MenuItem, "id" | "name" | "price" | "priceValue" | "image"> & {
   quantity: number;
@@ -6,6 +6,8 @@ export type BasketItem = Pick<MenuItem, "id" | "name" | "price" | "priceValue" |
   seasonalAddOn: SeasonalAddOn;
   sugarLevel: SugarLevel;
   milkOption: MilkOption;
+  iceOption: { id: string; name: IceOption; priceValue: number };
+  matchaService: { id: string; name: MatchaServiceOption; priceValue: number };
 };
 
 export function formatRupiah(value: number) {
@@ -31,17 +33,25 @@ export function addItem(items: BasketItem[], item: MenuItem): BasketItem[] {
     seasonalAddOn: { id: "none", name: "No seasonal add-on", priceValue: 0 },
     sugarLevel: 50,
     milkOption: "Dairy",
+    iceOption: { id: "ice-gabung", name: "Ice gabung", priceValue: 0 },
+    matchaService: { id: "matcha-gabung", name: "Matcha digabung", priceValue: 0 },
   });
 }
 
 export function addConfiguredItem(
   items: BasketItem[],
   item: MenuItem,
-  configuration: { seasonalAddOn: SeasonalAddOn; sugarLevel: SugarLevel; milkOption: MilkOption },
+  configuration: {
+    seasonalAddOn: SeasonalAddOn;
+    sugarLevel: SugarLevel;
+    milkOption: MilkOption;
+    iceOption: { id: string; name: IceOption; priceValue: number };
+    matchaService: { id: string; name: MatchaServiceOption; priceValue: number };
+  },
 ) {
-  const lineId = [item.id, configuration.seasonalAddOn.id, configuration.sugarLevel, configuration.milkOption].join("-").toLowerCase();
+  const lineId = [item.id, configuration.seasonalAddOn.id, configuration.sugarLevel, configuration.milkOption, configuration.iceOption.id, configuration.matchaService.id].join("-").toLowerCase();
   const existing = items.find((basketItem) => basketItem.lineId === lineId);
-  const configuredPriceValue = item.priceValue + configuration.seasonalAddOn.priceValue;
+  const configuredPriceValue = item.priceValue + configuration.seasonalAddOn.priceValue + configuration.iceOption.priceValue + configuration.matchaService.priceValue;
 
   if (existing) {
     return items.map((basketItem) =>
@@ -62,6 +72,8 @@ export function addConfiguredItem(
       seasonalAddOn: configuration.seasonalAddOn,
       sugarLevel: configuration.sugarLevel,
       milkOption: configuration.milkOption,
+      iceOption: configuration.iceOption,
+      matchaService: configuration.matchaService,
     },
   ];
 }

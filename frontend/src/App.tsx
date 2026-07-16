@@ -4,7 +4,7 @@ import { saveOrder } from "./api";
 import { addConfiguredItem, BasketItem, formatRupiah, getBasketCount, getBasketTotal, updateQuantity } from "./basket";
 import { BrandCredit } from "./BrandCredit";
 import { buildBasketWhatsappMessage, buildBasketWhatsappUrl } from "./whatsapp";
-import { categories, Category, logoImage, menuBoardImage, menuItems, milkOptions, seasonalAddOns, SugarLevel, sugarLevels, MilkOption } from "./menuData";
+import { categories, Category, iceOptions, logoImage, matchaServiceOptions, menuBoardImage, menuItems, milkOptions, seasonalAddOns, SugarLevel, sugarLevels, MilkOption } from "./menuData";
 
 type Customer = { name: string; phone: string };
 
@@ -19,6 +19,8 @@ export default function App() {
   const [selectedSeasonal, setSelectedSeasonal] = useState(seasonalAddOns[0]);
   const [selectedSugar, setSelectedSugar] = useState<SugarLevel>(50);
   const [selectedMilk, setSelectedMilk] = useState<MilkOption>("Dairy");
+  const [selectedIce, setSelectedIce] = useState(iceOptions[1]);
+  const [selectedMatchaService, setSelectedMatchaService] = useState(matchaServiceOptions[0]);
 
   const basketCount = getBasketCount(basket);
   const basketTotal = getBasketTotal(basket);
@@ -36,6 +38,8 @@ export default function App() {
     setSelectedSeasonal(seasonalAddOns[0]);
     setSelectedSugar(50);
     setSelectedMilk("Dairy");
+    setSelectedIce(iceOptions[1]);
+    setSelectedMatchaService(matchaServiceOptions[0]);
   }
 
   function addCustomizedItem() {
@@ -44,6 +48,8 @@ export default function App() {
       seasonalAddOn: selectedSeasonal,
       sugarLevel: selectedSugar,
       milkOption: selectedMilk,
+      iceOption: selectedIce,
+      matchaService: selectedMatchaService,
     }));
     setCustomizingItem(null);
   }
@@ -278,6 +284,30 @@ export default function App() {
             </fieldset>
 
             <fieldset className="mt-6">
+              <legend className="text-sm font-bold">Ice option</legend>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {iceOptions.map((option) => (
+                  <button key={option.id} type="button" onClick={() => setSelectedIce(option)} className={`rounded-md border px-2 py-3 text-left transition ${selectedIce.id === option.id ? "border-[#123b31] bg-[#123b31] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"}`}>
+                    <span className="block text-xs font-bold sm:text-sm">{option.name}</span>
+                    <span className={`mt-1 block text-[10px] font-semibold ${selectedIce.id === option.id ? "text-white/70" : "text-slate-500"}`}>{option.priceValue ? `+${formatRupiah(option.priceValue)}` : "No charge"}</span>
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset className="mt-6">
+              <legend className="text-sm font-bold">Matcha mini cup</legend>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                {matchaServiceOptions.map((option) => (
+                  <button key={option.id} type="button" onClick={() => setSelectedMatchaService(option)} className={`rounded-md border p-3 text-left transition ${selectedMatchaService.id === option.id ? "border-[#123b31] bg-[#123b31] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"}`}>
+                    <span className="block text-xs font-bold sm:text-sm">{option.name}</span>
+                    <span className={`mt-1 block text-[10px] font-semibold ${selectedMatchaService.id === option.id ? "text-white/70" : "text-slate-500"}`}>{option.priceValue ? `+${formatRupiah(option.priceValue)}` : "No charge"}</span>
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset className="mt-6">
               <legend className="text-sm font-bold">Sugar level</legend>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 {sugarLevels.map((level) => (
@@ -298,7 +328,7 @@ export default function App() {
             <div className="mt-7 flex items-center justify-between gap-4 border-t border-slate-200 pt-5">
               <div>
                 <span className="block text-xs font-bold uppercase tracking-[0.12em] text-slate-500">Price per drink</span>
-                <strong className="mt-1 block text-xl">{formatRupiah(customizingItem.priceValue + selectedSeasonal.priceValue)}</strong>
+                <strong className="mt-1 block text-xl">{formatRupiah(customizingItem.priceValue + selectedSeasonal.priceValue + selectedIce.priceValue + selectedMatchaService.priceValue)}</strong>
               </div>
               <button type="submit" className="rounded-md bg-[#123b31] px-5 py-3 font-bold text-white transition hover:bg-[#185345]">Add to basket</button>
             </div>

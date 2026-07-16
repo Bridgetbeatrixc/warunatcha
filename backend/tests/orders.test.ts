@@ -25,7 +25,21 @@ describe("validateOrder", () => {
       seasonalAddOn: "Isuzu",
       sugarLevel: 0,
       milkOption: "Oat",
+      iceOption: "Ice gabung",
+      matchaService: "Matcha digabung",
     });
+  });
+
+  it("adds mini-cup and separated-ice charges to the official total", () => {
+    const result = validateOrder({
+      customerName: "Bridget",
+      customerPhone: "081234567890",
+      items: [{ id: "og-matcha-latte", quantity: 1, iceOptionId: "ice-pisah", matchaServiceId: "matcha-mini-cup" }],
+    });
+
+    expect("order" in result && result.order.total_amount).toBe(53020);
+    expect("order" in result && result.order.items[0].options.iceOption).toBe("Ice pisah");
+    expect("order" in result && result.order.items[0].options.matchaService).toBe("Matcha dipisah (mini cup)");
   });
 
   it("rejects unknown products and excessive quantities", () => {

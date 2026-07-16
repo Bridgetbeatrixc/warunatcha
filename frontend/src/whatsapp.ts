@@ -19,7 +19,7 @@ export function buildBasketWhatsappMessage(params: {
 }) {
   const itemLines = params.items.map(
     (item, index) =>
-      `${index + 1}. ${item.name} x${item.quantity} - ${formatRupiah(item.priceValue * item.quantity)} (${item.seasonalAddOn.name}; sugar ${item.sugarLevel}%; ${item.milkOption})`,
+      `${index + 1}. ${item.name} x${item.quantity} - ${formatRupiah(item.priceValue * item.quantity)} (${item.seasonalAddOn.name}; ${item.sugarLevel}% sugar; ${item.milkOption}; ${item.iceOption.name}; ${item.matchaService.name})`,
   );
 
   return [

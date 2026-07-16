@@ -19,6 +19,8 @@ export type SeasonalAddOn = {
 
 export type SugarLevel = 0 | 25 | 50;
 export type MilkOption = "Dairy" | "Oat" | "Houseblend";
+export type IceOption = "No ice" | "Ice gabung" | "Ice pisah";
+export type MatchaServiceOption = "Matcha digabung" | "Matcha dipisah (mini cup)";
 
 const asset = (fileName: string) => `/assets/${encodeURIComponent(fileName)}`;
 const productAsset = (fileName: string) => `${asset(fileName)}?v=2`;
@@ -46,6 +48,15 @@ export const seasonalAddOns: SeasonalAddOn[] = [
 
 export const sugarLevels: SugarLevel[] = [0, 25, 50];
 export const milkOptions: MilkOption[] = ["Dairy", "Oat", "Houseblend"];
+export const iceOptions: Array<{ id: string; name: IceOption; priceValue: number }> = [
+  { id: "no-ice", name: "No ice", priceValue: 0 },
+  { id: "ice-gabung", name: "Ice gabung", priceValue: 0 },
+  { id: "ice-pisah", name: "Ice pisah", priceValue: 320 },
+];
+export const matchaServiceOptions: Array<{ id: string; name: MatchaServiceOption; priceValue: number }> = [
+  { id: "matcha-gabung", name: "Matcha digabung", priceValue: 0 },
+  { id: "matcha-mini-cup", name: "Matcha dipisah (mini cup)", priceValue: 700 },
+];
 
 export const menuItems: MenuItem[] = [
   {

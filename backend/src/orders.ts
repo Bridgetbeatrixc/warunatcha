@@ -1,4 +1,4 @@
-import { catalogById, milkOptions, seasonalAddOnById, sugarLevels } from "./catalog";
+import { catalogById, iceOptionById, matchaServiceById, milkOptions, seasonalAddOnById, sugarLevels } from "./catalog";
 
 export const orderStatuses = ["new", "preparing", "finished", "cancelled"] as const;
 export type OrderStatus = (typeof orderStatuses)[number];
@@ -8,7 +8,7 @@ export type SafeOrderItem = {
   name: string;
   quantity: number;
   price: number;
-  options: { seasonalAddOn: string; sugarLevel: number; milkOption: string };
+  options: { seasonalAddOn: string; sugarLevel: number; milkOption: string; iceOption: string; matchaService: string };
 };
 export type NewOrder = {
   customer_name: string;
@@ -49,6 +49,8 @@ export function validateOrder(payload: unknown): ValidationResult {
     const seasonalAddOn = seasonalAddOnById.get(String(inputItem.seasonalAddOnId ?? "none"));
     const sugarLevel = Number(inputItem.sugarLevel ?? 50);
     const milkOption = String(inputItem.milkOption ?? "Dairy");
+    const iceOption = iceOptionById.get(String(inputItem.iceOptionId ?? "ice-gabung"));
+    const matchaService = matchaServiceById.get(String(inputItem.matchaServiceId ?? "matcha-gabung"));
     if (!catalogItem) return { error: "Basket contains an unknown menu item." };
     if (!seasonalAddOn) return { error: "Basket contains an unknown seasonal add-on." };
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 20) {
@@ -56,12 +58,14 @@ export function validateOrder(payload: unknown): ValidationResult {
     }
     if (!sugarLevels.includes(sugarLevel as (typeof sugarLevels)[number])) return { error: "Invalid sugar level." };
     if (!milkOptions.includes(milkOption as (typeof milkOptions)[number])) return { error: "Invalid milk option." };
+    if (!iceOption) return { error: "Invalid ice option." };
+    if (!matchaService) return { error: "Invalid matcha mini cup option." };
     items.push({
       id: catalogItem.id,
       name: catalogItem.name,
       quantity,
-      price: catalogItem.price + seasonalAddOn.price,
-      options: { seasonalAddOn: seasonalAddOn.name, sugarLevel, milkOption },
+      price: catalogItem.price + seasonalAddOn.price + iceOption.price + matchaService.price,
+      options: { seasonalAddOn: seasonalAddOn.name, sugarLevel, milkOption, iceOption: iceOption.name, matchaService: matchaService.name },
     });
   }
 
