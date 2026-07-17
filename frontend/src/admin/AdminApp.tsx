@@ -75,7 +75,7 @@ function AdminLogin({ onSession }: { onSession: (session: Session) => void }) {
               <h1 className="mt-1 font-['Merriweather'] text-2xl font-bold">Order dashboard</h1>
             </div>
           </div>
-          <p className="mt-6 text-sm leading-6 text-white/65">Sign in with the approved Supabase administrator account.</p>
+          <p className="mt-6 text-sm leading-6 text-white/65">Sign in with any Supabase user account to manage orders.</p>
         </div>
 
         <form onSubmit={login} className="space-y-5 p-7">
