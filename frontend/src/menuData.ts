@@ -22,7 +22,7 @@ export type MilkOption = "Dairy" | "Oat" | "Houseblend";
 export type IceOption = "No ice" | "Ice gabung" | "Ice pisah";
 export type MatchaServiceOption = "Matcha digabung" | "Matcha dipisah (mini cup)";
 export type MenuNavGroup = {
-  id: "best-seller" | "signature" | "new";
+  id: "all" | "best-seller" | "signature" | "new";
   label: string;
   itemIds: string[];
 };
@@ -150,6 +150,11 @@ export const menuItems: MenuItem[] = [
 ];
 
 export const menuNavGroups: MenuNavGroup[] = [
+  {
+    id: "all",
+    label: "All",
+    itemIds: menuItems.map((item) => item.id),
+  },
   {
     id: "best-seller",
     label: "Best Seller",

@@ -9,7 +9,7 @@ import { iceOptions, logoImage, matchaServiceOptions, menuBoardImage, menuItems,
 type Customer = { name: string; phone: string; address: string };
 
 export default function App() {
-  const [activeGroup, setActiveGroup] = useState<"best-seller" | "signature" | "new">("best-seller");
+  const [activeGroup, setActiveGroup] = useState<"all" | "best-seller" | "signature" | "new">("all");
   const [query, setQuery] = useState("");
   const [basket, setBasket] = useState<BasketItem[]>([]);
   const [customer, setCustomer] = useState<Customer>({ name: "", phone: "", address: "" });
@@ -153,7 +153,7 @@ export default function App() {
           </header>
 
           <div className="rounded-t-lg bg-[#f9f5ea] px-4 pb-8 pt-5 sm:px-7">
-            <nav className="grid grid-cols-3 gap-1 pb-4 sm:gap-2" aria-label="Menu highlights">
+            <nav className="grid grid-cols-4 gap-1 pb-4 sm:gap-2" aria-label="Menu highlights">
               {menuNavGroups.map((group) => (
                 <button
                   key={group.id}
