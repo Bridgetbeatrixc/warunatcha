@@ -6,13 +6,13 @@ import { BrandCredit } from "./BrandCredit";
 import { buildBasketWhatsappMessage, buildBasketWhatsappUrl } from "./whatsapp";
 import { iceOptions, logoImage, matchaServiceOptions, menuBoardImage, menuItems, menuNavGroups, milkOptions, seasonalAddOns, SugarLevel, sugarLevels, MilkOption } from "./menuData";
 
-type Customer = { name: string; phone: string };
+type Customer = { name: string; phone: string; address: string };
 
 export default function App() {
   const [activeGroup, setActiveGroup] = useState<"best-seller" | "signature" | "new">("best-seller");
   const [query, setQuery] = useState("");
   const [basket, setBasket] = useState<BasketItem[]>([]);
-  const [customer, setCustomer] = useState<Customer>({ name: "", phone: "" });
+  const [customer, setCustomer] = useState<Customer>({ name: "", phone: "", address: "" });
   const [checkoutState, setCheckoutState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [checkoutMessage, setCheckoutMessage] = useState("");
   const [customizingItem, setCustomizingItem] = useState<(typeof menuItems)[number] | null>(null);
@@ -65,6 +65,7 @@ export default function App() {
     const baseMessage = buildBasketWhatsappMessage({
       customerName: customer.name,
       customerPhone: customer.phone,
+      customerAddress: customer.address,
       items: basket,
       paymentMethod,
       thermalBag,
@@ -74,6 +75,7 @@ export default function App() {
       const savedOrder = await saveOrder({
         customerName: customer.name,
         customerPhone: customer.phone,
+        customerAddress: customer.address,
         items: basket,
         paymentMethod,
         thermalBag,
@@ -82,6 +84,7 @@ export default function App() {
       const whatsappMessage = buildBasketWhatsappMessage({
         customerName: customer.name,
         customerPhone: customer.phone,
+        customerAddress: customer.address,
         items: basket,
         paymentMethod,
         thermalBag,
@@ -96,7 +99,7 @@ export default function App() {
     }
   }
 
-  const checkoutDisabled = checkoutState === "saving" || basket.length === 0 || customer.name.trim().length < 2 || customer.phone.trim().length < 8;
+  const checkoutDisabled = checkoutState === "saving" || basket.length === 0 || customer.name.trim().length < 2 || customer.phone.trim().length < 8 || customer.address.trim().length < 5;
 
   return (
     <main className="min-h-screen min-w-[320px] bg-[#ebe4d5] px-0 py-0 font-['Source_Sans_3'] text-[#172338] sm:px-5 sm:py-5">
@@ -253,6 +256,10 @@ export default function App() {
               <label className="block">
                 <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/50">Phone number</span>
                 <input value={customer.phone} onChange={(event) => setCustomer((current) => ({ ...current, phone: event.target.value }))} className="h-12 w-full rounded-md border border-white/10 bg-white/10 px-4 font-semibold text-white outline-none placeholder:text-white/30 focus:border-white/30" placeholder="08xxxxxxxxxx" inputMode="tel" required />
+              </label>
+              <label className="block">
+                <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-white/50">Address</span>
+                <textarea value={customer.address} onChange={(event) => setCustomer((current) => ({ ...current, address: event.target.value }))} className="min-h-20 w-full resize-y rounded-md border border-white/10 bg-white/10 px-4 py-3 font-semibold text-white outline-none placeholder:text-white/30 focus:border-white/30" placeholder="Street, building, area, and any delivery note" required />
               </label>
             </div>
 

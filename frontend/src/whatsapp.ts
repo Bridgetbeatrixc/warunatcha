@@ -14,6 +14,7 @@ export function buildWhatsappUrl(item: MenuItem) {
 export function buildBasketWhatsappMessage(params: {
   customerName: string;
   customerPhone: string;
+  customerAddress: string;
   items: BasketItem[];
   paymentMethod: "BCA" | "OVO" | "GoPay" | "SeaBank";
   thermalBag: boolean;
@@ -33,6 +34,7 @@ export function buildBasketWhatsappMessage(params: {
     "",
     `Name: ${params.customerName}`,
     `Phone: ${params.customerPhone}`,
+    `Address: ${params.customerAddress}`,
     `Payment method: ${params.paymentMethod}`,
     params.thermalBag ? "Thermal bag: +Rp 5.000" : "",
     params.orderNumber ? `Order number: #${params.orderNumber}` : "",

@@ -5,6 +5,7 @@ const apiUrl = import.meta.env.VITE_API_URL || "https://warunatcha-api.bbeatrix.
 export type OrderPayload = {
   customerName: string;
   customerPhone: string;
+  customerAddress: string;
   items: BasketItem[];
   whatsappMessage: string;
   paymentMethod: "BCA" | "OVO" | "GoPay" | "SeaBank";
@@ -20,6 +21,7 @@ export async function saveOrder(payload: OrderPayload) {
     body: JSON.stringify({
       customerName: payload.customerName,
       customerPhone: payload.customerPhone,
+      customerAddress: payload.customerAddress,
       whatsappMessage: payload.whatsappMessage,
       paymentMethod: payload.paymentMethod,
       thermalBag: payload.thermalBag,

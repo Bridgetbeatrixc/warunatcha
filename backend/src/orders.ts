@@ -17,6 +17,7 @@ export type SafeOrderItem = {
 export type NewOrder = {
   customer_name: string;
   customer_phone: string;
+  customer_address: string;
   items: SafeOrderItem[];
   total_amount: number;
   whatsapp_message: string;
@@ -34,6 +35,7 @@ export function validateOrder(payload: unknown): ValidationResult {
   const input = payload as Record<string, unknown>;
   const customerName = String(input.customerName ?? "").trim();
   const customerPhone = String(input.customerPhone ?? "").replace(/[^\d+]/g, "");
+  const customerAddress = String(input.customerAddress ?? "").trim();
   const requestedItems = Array.isArray(input.items) ? input.items : [];
   const whatsappMessage = String(input.whatsappMessage ?? "").trim().slice(0, 4000);
   const paymentMethod = String(input.paymentMethod ?? "");
@@ -44,6 +46,9 @@ export function validateOrder(payload: unknown): ValidationResult {
   }
   if (customerPhone.length < 8 || customerPhone.length > 20) {
     return { error: "Valid phone number is required." };
+  }
+  if (customerAddress.length < 5 || customerAddress.length > 300) {
+    return { error: "Address must be between 5 and 300 characters." };
   }
   if (requestedItems.length === 0 || requestedItems.length > 20) {
     return { error: "Basket must contain between 1 and 20 menu items." };
@@ -83,6 +88,7 @@ export function validateOrder(payload: unknown): ValidationResult {
     order: {
       customer_name: customerName,
       customer_phone: customerPhone,
+      customer_address: customerAddress,
       items,
       total_amount: items.reduce((total, item) => total + item.price * item.quantity, 0) + (thermalBag ? 5000 : 0),
       whatsapp_message: whatsappMessage,

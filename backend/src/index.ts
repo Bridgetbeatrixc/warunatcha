@@ -113,7 +113,7 @@ app.get("/api/orders", async (c) => {
 
   let query = database(c)
     .from("orders")
-    .select("id, order_number, customer_name, customer_phone, items, total_amount, packaging_amount, payment_method, payment_status, status, created_at, updated_at, finished_at, cancelled_at", { count: "exact" })
+    .select("id, order_number, customer_name, customer_phone, customer_address, items, total_amount, packaging_amount, payment_method, payment_status, status, created_at, updated_at, finished_at, cancelled_at", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(start, start + limit - 1);
 

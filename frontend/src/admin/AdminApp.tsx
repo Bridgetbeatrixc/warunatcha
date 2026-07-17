@@ -302,6 +302,7 @@ function Dashboard({ session }: { session: Session }) {
                 <div className="min-w-0">
                   <p className="truncate font-bold text-slate-900">{order.customer_name}</p>
                   <a href={`tel:${order.customer_phone}`} className="mt-1 block text-xs font-medium text-emerald-800 hover:underline">{order.customer_phone}</a>
+                  {order.customer_address ? <p className="mt-1 text-xs leading-5 text-slate-500">{order.customer_address}</p> : null}
                 </div>
                 <div className="space-y-1 text-sm text-slate-600">
                   {order.items.map((item) => (

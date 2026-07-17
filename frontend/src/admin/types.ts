@@ -21,6 +21,7 @@ export type AdminOrder = {
   order_number: number;
   customer_name: string;
   customer_phone: string;
+  customer_address: string;
   items: AdminOrderItem[];
   total_amount: number;
   packaging_amount: number;
