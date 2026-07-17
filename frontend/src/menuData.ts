@@ -152,7 +152,7 @@ export const menuItems: MenuItem[] = [
 export const menuNavGroups: MenuNavGroup[] = [
   {
     id: "best-seller",
-    label: "Best seller KSH",
+    label: "Best Seller",
     itemIds: ["cold-whisk-matcha", "peanut-butter-matcha", "salted-cream-matcha", "strawberry-matcha"],
   },
   {

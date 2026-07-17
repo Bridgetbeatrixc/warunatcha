@@ -23,6 +23,7 @@ export type NewOrder = {
   status: "new";
   payment_method: PaymentMethod;
   payment_status: "unpaid";
+  packaging_amount: number;
 };
 
 type ValidationResult = { order: NewOrder } | { error: string };
@@ -36,6 +37,7 @@ export function validateOrder(payload: unknown): ValidationResult {
   const requestedItems = Array.isArray(input.items) ? input.items : [];
   const whatsappMessage = String(input.whatsappMessage ?? "").trim().slice(0, 4000);
   const paymentMethod = String(input.paymentMethod ?? "");
+  const thermalBag = input.thermalBag === true;
 
   if (customerName.length < 2 || customerName.length > 100) {
     return { error: "Customer name must be between 2 and 100 characters." };
@@ -82,11 +84,12 @@ export function validateOrder(payload: unknown): ValidationResult {
       customer_name: customerName,
       customer_phone: customerPhone,
       items,
-      total_amount: items.reduce((total, item) => total + item.price * item.quantity, 0),
+      total_amount: items.reduce((total, item) => total + item.price * item.quantity, 0) + (thermalBag ? 5000 : 0),
       whatsapp_message: whatsappMessage,
       status: "new",
       payment_method: paymentMethod as PaymentMethod,
       payment_status: "unpaid",
+      packaging_amount: thermalBag ? 5000 : 0,
     },
   };
 }

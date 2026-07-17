@@ -10,6 +10,8 @@ export type BasketItem = Pick<MenuItem, "id" | "name" | "price" | "priceValue" |
   matchaService: { id: string; name: MatchaServiceOption; priceValue: number };
 };
 
+export const thermalBagPrice = 5000;
+
 export function formatRupiah(value: number) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",

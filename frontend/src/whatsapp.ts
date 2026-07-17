@@ -16,6 +16,7 @@ export function buildBasketWhatsappMessage(params: {
   customerPhone: string;
   items: BasketItem[];
   paymentMethod: "BCA" | "OVO" | "GoPay" | "SeaBank";
+  thermalBag: boolean;
   orderNumber?: number;
 }) {
   const itemLines = params.items.map(
@@ -33,6 +34,7 @@ export function buildBasketWhatsappMessage(params: {
     `Name: ${params.customerName}`,
     `Phone: ${params.customerPhone}`,
     `Payment method: ${params.paymentMethod}`,
+    params.thermalBag ? "Thermal bag: +Rp 5.000" : "",
     params.orderNumber ? `Order number: #${params.orderNumber}` : "",
     "",
     "Please confirm availability and payment details. Thank you.",

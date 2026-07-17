@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { Hono } from "hono";
 import type { Context } from "hono";
-import { canTransitionOrder, isOrderStatus, paymentStatuses, validateOrder } from "./orders";
+import { canTransitionOrder, isOrderStatus, paymentMethods, paymentStatuses, validateOrder } from "./orders";
 
 type Bindings = {
   SUPABASE_URL: string;
@@ -113,7 +113,7 @@ app.get("/api/orders", async (c) => {
 
   let query = database(c)
     .from("orders")
-    .select("id, order_number, customer_name, customer_phone, items, total_amount, payment_method, payment_status, status, created_at, updated_at, finished_at, cancelled_at", { count: "exact" })
+    .select("id, order_number, customer_name, customer_phone, items, total_amount, packaging_amount, payment_method, payment_status, status, created_at, updated_at, finished_at, cancelled_at", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(start, start + limit - 1);
 
@@ -200,21 +200,21 @@ app.patch("/api/orders/:id/payment", async (c) => {
   const auth = await requireAdmin(c);
   if (auth.error) return auth.error;
 
-  let body: { payment_status?: string };
+  let body: { payment_status?: string; payment_method?: string };
   try {
     body = await c.req.json();
   } catch {
     return c.json({ error: "Payment payload must be valid JSON." }, 400);
   }
-  if (!body.payment_status || !paymentStatuses.includes(body.payment_status as (typeof paymentStatuses)[number])) {
-    return c.json({ error: "Invalid payment status." }, 400);
-  }
+  if (body.payment_status && !paymentStatuses.includes(body.payment_status as (typeof paymentStatuses)[number])) return c.json({ error: "Invalid payment status." }, 400);
+  if (body.payment_method && !paymentMethods.includes(body.payment_method as (typeof paymentMethods)[number])) return c.json({ error: "Invalid payment method." }, 400);
+  if (!body.payment_status && !body.payment_method) return c.json({ error: "Provide a payment method or payment status." }, 400);
 
   const { data, error } = await database(c)
     .from("orders")
-    .update({ payment_status: body.payment_status, updated_at: new Date().toISOString() })
+    .update({ payment_status: body.payment_status, payment_method: body.payment_method, updated_at: new Date().toISOString() })
     .eq("id", c.req.param("id"))
-    .select("id, payment_status, updated_at")
+    .select("id, payment_method, payment_status, updated_at")
     .maybeSingle();
   if (error) return c.json({ error: "Payment status could not be updated." }, 500);
   if (!data) return c.json({ error: "Order not found." }, 404);

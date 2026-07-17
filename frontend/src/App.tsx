@@ -1,7 +1,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import { Minus, Plus, Search, ShoppingBag } from "lucide-react";
 import { saveOrder } from "./api";
-import { addConfiguredItem, BasketItem, formatRupiah, getBasketCount, getBasketTotal, updateQuantity } from "./basket";
+import { addConfiguredItem, BasketItem, formatRupiah, getBasketCount, getBasketTotal, thermalBagPrice, updateQuantity } from "./basket";
 import { BrandCredit } from "./BrandCredit";
 import { buildBasketWhatsappMessage, buildBasketWhatsappUrl } from "./whatsapp";
 import { iceOptions, logoImage, matchaServiceOptions, menuBoardImage, menuItems, menuNavGroups, milkOptions, seasonalAddOns, SugarLevel, sugarLevels, MilkOption } from "./menuData";
@@ -22,9 +22,11 @@ export default function App() {
   const [selectedIce, setSelectedIce] = useState(iceOptions[1]);
   const [selectedMatchaService, setSelectedMatchaService] = useState(matchaServiceOptions[0]);
   const [paymentMethod, setPaymentMethod] = useState<"BCA" | "OVO" | "GoPay" | "SeaBank">("BCA");
+  const [thermalBag, setThermalBag] = useState(false);
 
   const basketCount = getBasketCount(basket);
   const basketTotal = getBasketTotal(basket);
+  const checkoutTotal = basketTotal + (thermalBag ? thermalBagPrice : 0);
   const visibleItems = useMemo(() => {
     const search = query.trim().toLowerCase();
     const activeIds = new Set(menuNavGroups.find((group) => group.id === activeGroup)?.itemIds ?? []);
@@ -65,6 +67,7 @@ export default function App() {
       customerPhone: customer.phone,
       items: basket,
       paymentMethod,
+      thermalBag,
     });
 
     try {
@@ -73,6 +76,7 @@ export default function App() {
         customerPhone: customer.phone,
         items: basket,
         paymentMethod,
+        thermalBag,
         whatsappMessage: baseMessage,
       });
       const whatsappMessage = buildBasketWhatsappMessage({
@@ -80,6 +84,7 @@ export default function App() {
         customerPhone: customer.phone,
         items: basket,
         paymentMethod,
+        thermalBag,
         orderNumber: savedOrder.orderNumber,
       });
       setCheckoutState("saved");
@@ -217,7 +222,7 @@ export default function App() {
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/45">Checkout</p>
                 <h2 className="mt-1 font-['Merriweather'] text-2xl font-bold">Shopping basket</h2>
               </div>
-              <strong className="rounded-full bg-white px-3 py-2 text-sm text-[#123b31]">{formatRupiah(basketTotal)}</strong>
+              <strong className="rounded-full bg-white px-3 py-2 text-sm text-[#123b31]">{formatRupiah(checkoutTotal)}</strong>
             </div>
 
             <div className="mt-5 space-y-3">
@@ -260,8 +265,13 @@ export default function App() {
               </div>
             </fieldset>
 
+            <label className="mt-4 flex cursor-pointer items-center justify-between gap-3 rounded-md border border-white/10 bg-white/10 p-3">
+              <span><span className="block text-sm font-bold">Thermal bag</span><span className="mt-1 block text-xs font-semibold text-white/55">Keep your order chilled · +Rp 5.000</span></span>
+              <input type="checkbox" checked={thermalBag} onChange={(event) => setThermalBag(event.target.checked)} className="h-5 w-5 accent-[#f2c46b]" aria-label="Add thermal bag" />
+            </label>
+
             <div className="mt-5 overflow-hidden rounded-md bg-white">
-              <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 text-[#123b31]"><span className="text-sm font-bold">To be paid</span><strong>{formatRupiah(basketTotal)}</strong></div>
+              <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 text-[#123b31]"><span className="text-sm font-bold">To be paid</span><strong>{formatRupiah(checkoutTotal)}</strong></div>
               <button type="submit" disabled={checkoutDisabled} className="h-14 w-full bg-[#f2c46b] font-bold text-[#123b31] transition hover:bg-[#f6cf83] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500">
                 {checkoutState === "saving" ? "Saving order..." : "Save and open WhatsApp"}
               </button>

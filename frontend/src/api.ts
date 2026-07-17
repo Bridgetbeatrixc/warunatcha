@@ -8,6 +8,7 @@ export type OrderPayload = {
   items: BasketItem[];
   whatsappMessage: string;
   paymentMethod: "BCA" | "OVO" | "GoPay" | "SeaBank";
+  thermalBag: boolean;
 };
 
 export async function saveOrder(payload: OrderPayload) {
@@ -21,6 +22,7 @@ export async function saveOrder(payload: OrderPayload) {
       customerPhone: payload.customerPhone,
       whatsappMessage: payload.whatsappMessage,
       paymentMethod: payload.paymentMethod,
+      thermalBag: payload.thermalBag,
       items: payload.items.map((item) => ({
         id: item.id,
         name: item.name,

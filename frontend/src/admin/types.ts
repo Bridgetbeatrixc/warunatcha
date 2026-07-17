@@ -23,6 +23,7 @@ export type AdminOrder = {
   customer_phone: string;
   items: AdminOrderItem[];
   total_amount: number;
+  packaging_amount: number;
   payment_method: PaymentMethod;
   payment_status: PaymentStatus;
   status: OrderStatus;

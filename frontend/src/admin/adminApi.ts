@@ -1,4 +1,4 @@
-import type { AdminOrder, OrderStatus, OrderSummary, PaymentStatus } from "./types";
+import type { AdminOrder, OrderStatus, OrderSummary, PaymentMethod, PaymentStatus } from "./types";
 
 const apiUrl = import.meta.env.VITE_API_URL || "https://warunatcha-api.bbeatrix.workers.dev";
 
@@ -33,10 +33,10 @@ export function setOrderStatus(token: string, id: string, status: OrderStatus) {
   );
 }
 
-export function setPaymentStatus(token: string, id: string, payment_status: PaymentStatus) {
-  return adminRequest<{ order: Pick<AdminOrder, "id" | "payment_status" | "updated_at"> }>(
+export function updatePayment(token: string, id: string, updates: { payment_status?: PaymentStatus; payment_method?: PaymentMethod }) {
+  return adminRequest<{ order: Pick<AdminOrder, "id" | "payment_method" | "payment_status" | "updated_at"> }>(
     `/api/orders/${id}/payment`,
     token,
-    { method: "PATCH", body: JSON.stringify({ payment_status }) },
+    { method: "PATCH", body: JSON.stringify(updates) },
   );
 }

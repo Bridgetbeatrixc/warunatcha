@@ -14,9 +14,9 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { formatRupiah } from "../basket";
 import { GrowlaneLogo } from "../BrandCredit";
 import { logoImage } from "../menuData";
-import { getOrders, getOrderSummary, setOrderStatus, setPaymentStatus } from "./adminApi";
+import { getOrders, getOrderSummary, setOrderStatus, updatePayment } from "./adminApi";
 import { adminSupabase, hasSupabaseConfig } from "./supabase";
-import type { AdminOrder, OrderStatus, OrderSummary, PaymentStatus } from "./types";
+import type { AdminOrder, OrderStatus, OrderSummary, PaymentMethod, PaymentStatus } from "./types";
 
 const statuses: Array<OrderStatus | "all"> = ["all", "new", "preparing", "finished", "cancelled"];
 const emptySummary: OrderSummary = { total: 0, new: 0, preparing: 0, finished: 0, cancelled: 0, revenue: 0 };
@@ -173,11 +173,11 @@ function Dashboard({ session }: { session: Session }) {
     }
   }
 
-  async function updatePayment(order: AdminOrder, nextStatus: PaymentStatus) {
+  async function updateOrderPayment(order: AdminOrder, updates: { payment_status?: PaymentStatus; payment_method?: PaymentMethod }) {
     setUpdatingId(order.id);
     setError("");
     try {
-      await setPaymentStatus(session.access_token, order.id, nextStatus);
+      await updatePayment(session.access_token, order.id, updates);
       await loadData(true);
     } catch (updateError) {
       setError(updateError instanceof Error ? updateError.message : "Payment status could not be updated.");
@@ -316,8 +316,11 @@ function Dashboard({ session }: { session: Session }) {
                 </div>
                 <div>
                   <strong className="text-sm text-slate-900">{formatRupiah(order.total_amount)}</strong>
-                  <p className="mt-1 text-xs font-semibold text-slate-500">{order.payment_method}</p>
-                  <button type="button" onClick={() => void updatePayment(order, order.payment_status === "paid" ? "unpaid" : "paid")} disabled={updatingId === order.id} className={`mt-2 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide transition disabled:opacity-50 ${order.payment_status === "paid" ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200" : "bg-rose-100 text-rose-800 hover:bg-rose-200"}`}>
+                  {order.packaging_amount > 0 ? <p className="mt-1 text-[10px] font-semibold text-slate-500">Thermal bag +Rp 5.000</p> : null}
+                  <select value={order.payment_method} onChange={(event) => void updateOrderPayment(order, { payment_method: event.target.value as PaymentMethod })} disabled={updatingId === order.id} className="mt-2 h-8 rounded-md border border-slate-300 bg-white px-2 text-xs font-bold text-slate-700 disabled:opacity-50" aria-label={`Payment method for order ${order.order_number}`}>
+                    {(["BCA", "OVO", "GoPay", "SeaBank"] as const).map((method) => <option key={method}>{method}</option>)}
+                  </select>
+                  <button type="button" onClick={() => void updateOrderPayment(order, { payment_status: order.payment_status === "paid" ? "unpaid" : "paid" })} disabled={updatingId === order.id} className={`mt-2 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide transition disabled:opacity-50 ${order.payment_status === "paid" ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200" : "bg-rose-100 text-rose-800 hover:bg-rose-200"}`}>
                     {order.payment_status === "paid" ? "Paid" : "Unpaid"}
                   </button>
                 </div>
