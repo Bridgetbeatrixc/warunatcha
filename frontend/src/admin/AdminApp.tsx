@@ -198,7 +198,7 @@ function Dashboard({ session }: { session: Session }) {
     { label: "New", value: summary.new, accent: "border-amber-400" },
     { label: "Preparing", value: summary.preparing, accent: "border-blue-400" },
     { label: "Finished", value: summary.finished, accent: "border-emerald-500" },
-    { label: "Revenue", value: formatRupiah(summary.revenue), accent: "border-violet-500" },
+    { label: "Paid revenue", value: formatRupiah(summary.revenue), accent: "border-violet-500" },
   ];
 
   return (
