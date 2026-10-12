@@ -4,11 +4,10 @@ This Worker saves customer orders to Supabase and exposes protected order-manage
 
 ## Supabase setup
 
-1. Rotate the database password that was shared in chat. The Worker does not need that password.
-2. Run `supabase/migrations/001_create_orders.sql` in the Supabase SQL editor.
-3. Disable public user signup in Supabase Auth and create the administrator account manually.
-4. Copy `.dev.vars.example` to `.dev.vars` for local development.
-5. Use the project URL and a Supabase secret/service-role key. Never use the secret key in the frontend.
+1. Run the SQL files in `supabase/migrations/` in order in the Supabase SQL editor.
+2. Disable public user signup in Supabase Auth and create the administrator account manually.
+3. Copy `.dev.vars.example` to `.dev.vars` for local development.
+4. Use the project URL and a Supabase secret/service-role key. Never use the secret key in the frontend.
 
 ## Cloudflare setup
 
